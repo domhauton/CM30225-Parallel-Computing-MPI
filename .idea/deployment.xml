@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" promptOnRemoteOverwrite="CHECK_TIMESTAMP" serverName="tux - bath" filePermissions="448" folderPermissions="448">
+    <serverData>
+      <paths name="do - heavy">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/parallel" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="tux - bath">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/Documents/parallel" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

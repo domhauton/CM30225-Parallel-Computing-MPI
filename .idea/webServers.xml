@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="634abfbc-079a-4cb0-8ff1-3da78378690c" name="tux - bath" url="http://linux.bath.ac.uk">
+        <fileTransfer host="linux.bath.ac.uk" port="22" privateKey="$USER_HOME$/.ssh/bath_lcpu" rootFolder="/u/q/dh499" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="84a48a99-6265-484b-8d83-249e2124a0ab" name="do - heavy" url="http://139.59.191.227">
+        <fileTransfer host="139.59.191.227" port="22" privateKey="$USER_HOME$/.ssh/do_taurus" rootFolder="/root" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

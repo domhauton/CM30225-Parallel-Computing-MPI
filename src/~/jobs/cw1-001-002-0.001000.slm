@@ -1,0 +1,13 @@
+#!/bin/sh
+# Account & partition (must have these)
+#SBATCH --account=cm30225
+#SBATCH --partition=teaching
+#SBATCH --mail-type=END
+#SBATCH --mail-user=domhauton@gmail.com
+#SBATCH --nodes=1
+#SBATCH --output=out/001-002-0.001000-%j.out
+#SBATCH --error=out/001-002-0.001000-%j.err
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=00:00:20
+#SBATCH --job-name=d-01-002-0.001000
+./parallel_computation_cw1 1 2 0.001000
