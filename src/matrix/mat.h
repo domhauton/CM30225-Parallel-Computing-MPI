@@ -20,15 +20,15 @@ mat_itr_edge_t *mat_itr_edge_create(mat_t *matrix);
 
 void mat_copy_edge(mat_t *source, mat_t *target);
 
-mat_smthr_t *mat_smthr_create_inner(mat_t *source, mat_t *target, double limit, bool *overLimit);
+mat_smthr_t *mat_smthr_create_inner_single(mat_t *source, mat_t *target, double limit, bool *overLimit);
 
 void mat_smthr_create_inner_rowcut(mat_t *source, mat_t *tmp,
                                    double limit, bool *overLimit,
                                    unsigned int sections, mat_smthr_t **smoothers);
 
-long mat_smthr_create_inner_cut_even(mat_t *source, mat_t *tmp,
-                                     double limit, bool *overLimit,
-                                     unsigned int smthrSize, mat_smthr_list_t *matSmthrLinkedList);
+long mat_smthr_get(mat_t *source, mat_t *tmp,
+                   double limit, bool *overLimit,
+                   unsigned int smthrSize, mat_smthr_list_t *matSmthrLinkedList);
 
 mat_t *mat_smooth(mat_t *source, mat_t *target, double limit, bool *overLimit);
 

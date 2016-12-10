@@ -9,7 +9,7 @@
 
 typedef struct MAT_SMTHR_T mat_smthr_t;
 
-typedef struct MAT_SMTHR_LIST_T{
+typedef struct MAT_SMTHR_LIST_T {
     mat_smthr_t *data;
     struct MAT_SMTHR_LIST_T *next;
 } mat_smthr_list_t;
@@ -24,8 +24,6 @@ mat_smthr_t *mat_smthr_init(mat_itr_t *target,
                             double diffLimit);
 
 void mat_smthr_smooth(mat_smthr_t *matSmoother);
-
-mat_smthr_t *mat_smthr_split(mat_smthr_t *matSmoother1);
 
 void mat_smthr_destroy(mat_smthr_t *matSmoother);
 

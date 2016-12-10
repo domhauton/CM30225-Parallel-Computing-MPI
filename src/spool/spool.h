@@ -6,7 +6,7 @@
 #define PARALLEL_COMPUTATION_CW1_SMOOTHINGPOOL_H
 
 #include <semaphore.h>
-#include "mat_smthr.h"
+#include "../matrix/mat_smthr.h"
 
 typedef struct SPOOL_JOB_SYNC_T spool_job_sync_t;
 typedef struct SPOOL_JOB_T spool_job_t;

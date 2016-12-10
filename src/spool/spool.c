@@ -63,6 +63,8 @@ void spool_job_add(spool_t *spool, mat_smthr_t *smoother, spool_job_sync_t *spoo
     newSpoolJob->matSmoother = smoother;
     newSpoolJob->spoolJobSync = spoolJobSync;
     spool_job_add_inner(spool, newSpoolJob);
+    int x = 0;
+    x += 1;
     sem_post(&spool->jobWaitSem);
 }
 

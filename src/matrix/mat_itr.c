@@ -7,17 +7,16 @@
 #include <stdio.h>
 
 /* Iterator implementation for mat_t */
-typedef struct {
+typedef struct MAT_ITR_T {
     double *currentPtr;
     double *rowEnd;
     double *areaEnd;
     long nextRowJump;
     long areaWidth;
-    int itrStep;
 } mat_itr_t;
 
 /* Will iterate over every value on the outside of the matrix */
-typedef struct {
+typedef struct MAT_ITR_EDGE_T {
     double *currentPtr;
     double *endFirstRow;
     double *startFinalRow;
@@ -44,7 +43,6 @@ mat_itr_t *mat_itr_init(double *dataPtr, long fullWidth, long areaWidth, long ar
     matIterator->areaEnd = matIterator->currentPtr + (fullWidth * (areaHeight - 1)) + areaWidth;
     matIterator->areaWidth = areaWidth;
     matIterator->rowEnd = matIterator->currentPtr + matIterator->areaWidth - 1;
-    matIterator->itrStep = 1;
     return matIterator;
 }
 
@@ -61,44 +59,11 @@ bool mat_itr_edge_hasNext(mat_itr_edge_t *edgeIterator) {
 /* Advance one value in the matrix.
         Behaviour undefined if used on a split matrix
         Behaviour undefined if end of matrix is passed */
-double *mat_itr_step_unsafe(mat_itr_t *matIterator) {
+double *mat_itr_next(mat_itr_t *matIterator) {
     if (matIterator->currentPtr > matIterator->rowEnd) {
         mat_itr_advance_row(matIterator);
     }
     return matIterator->currentPtr++;
-}
-
-/* Advance one value in the matrix.
-        Behaviour undefined if used on a split matrix
-        NULL if end of matrix is reached */
-double *mat_itr_step(mat_itr_t *matIterator) {
-    if (mat_itr_hasNext(matIterator)) {
-        return mat_itr_step_unsafe(matIterator);
-    } else {
-        return NULL;
-    }
-}
-/* Advance the iterator
-        Behaviour undefined if end of matrix is passed */
-double *mat_itr_next_unsafe(mat_itr_t *matIterator) {
-    double *retPtr = matIterator->currentPtr;
-    matIterator->currentPtr += matIterator->itrStep;
-    if (matIterator->currentPtr > matIterator->rowEnd) {
-        mat_itr_advance_row(matIterator);
-    }
-    return retPtr;
-}
-
-/* Advance the iterator
-        NULL if end of matrix is reached */
-double *mat_itr_next(mat_itr_t *matIterator) {
-    double *retPtr = mat_itr_step(matIterator);
-    if (matIterator != NULL) {
-        for (int i = matIterator->itrStep; i > 1; i--) {
-            mat_itr_step(matIterator);
-        }
-    }
-    return retPtr;
 }
 
 /* Closes the iterator. */
@@ -136,25 +101,6 @@ double *mat_itr_edge_next(mat_itr_edge_t *edgeIterator) {
     } else {
         return NULL;
     }
-}
-
-/* Splits the iterator into two, returning a new iterator.
-        The current iterator will now skip half the values ahead which will be covered by the returned iterator.
-        Thread unsafe operation. */
-mat_itr_t *mat_itr_split(mat_itr_t *matIterator1) {
-    mat_itr_t *matIterator2 = malloc(sizeof(mat_itr_t));
-    matIterator2->currentPtr = matIterator1->currentPtr;
-    matIterator2->rowEnd = matIterator1->rowEnd;
-    matIterator2->areaEnd = matIterator1->areaEnd;
-    matIterator2->nextRowJump = matIterator1->nextRowJump;
-    matIterator2->areaWidth = matIterator1->areaWidth;
-    matIterator2->itrStep = matIterator1->itrStep;
-
-    mat_itr_next_unsafe(matIterator2);
-
-    matIterator1->itrStep *= 2;
-    matIterator2->itrStep *= 2;
-    return matIterator2;
 }
 
 /* Cleans up the structure. Do not use after calling this function. */

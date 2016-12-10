@@ -58,47 +58,14 @@ mat_smthr_t *mat_smthr_create_partial(mat_t *source, mat_t *tmp,
 }
 
 /* Initialise a smoother for the inside of the matrix (excluding outer edge) */
-mat_smthr_t *mat_smthr_create_inner(mat_t *source, mat_t *target, double limit, bool *overLimit) {
+mat_smthr_t *mat_smthr_create_inner_single(mat_t *source, mat_t *target, double limit, bool *overLimit) {
     long itrWidth = target->xSize - 2;
     long itrHeight = target->ySize - 2;
     return mat_smthr_create_partial(source, target, limit, overLimit, 1, 1, itrWidth, itrHeight);
 }
 
-/* Initialise a smoothers for the inside of the matrix (excluding outer edge). Place them in the given **smoothersArray
-        If smoothers size < sections behaviour undefined */
-void mat_smthr_create_inner_rowcut(mat_t *source,
-                                   mat_t *tmp,
-                                   double limit,
-                                   bool *overLimit,
-                                   unsigned int sections,
-                                   mat_smthr_t **smoothers){
-    long smoothingHeight = tmp->ySize - 2;
-    mat_smthr_t** tmpPtr = smoothers;
-
-    if(smoothingHeight <= sections) { // 1 Thread per row
-        for(int i = 1; i < tmp->ySize; i++) {
-            *tmpPtr++ = mat_smthr_create_partial(source, tmp, limit, overLimit, 1, i, tmp->xSize - 2, 1);
-        }
-    } else {
-        long sectionHeight = smoothingHeight / sections;
-        long longerSections = smoothingHeight % sections;
-        long nextHeight = 1;
-        for(int i = 0; i < sections; i++) {
-            if(i < longerSections) {
-                *tmpPtr++ = mat_smthr_create_partial(source, tmp, limit, overLimit, 1, nextHeight, tmp->xSize - 2,
-                                                     sectionHeight + 1);
-                nextHeight += sectionHeight + 1;
-            } else {
-                *tmpPtr++ = mat_smthr_create_partial(source, tmp, limit, overLimit, 1, nextHeight, tmp->xSize - 2,
-                                                     sectionHeight);
-                nextHeight += sectionHeight;
-            }
-        }
-    }
-}
-
 /* Adds inner cut smooth jobs to head of give linked list */
-long mat_smthr_create_inner_cut_even(mat_t *source,
+long mat_smthr_create_inner_multiple(mat_t *source,
                                      mat_t *tmp,
                                      double limit,
                                      bool *overLimit,
@@ -142,7 +109,7 @@ mat_t *mat_smooth(mat_t *source, mat_t *target, double limit, bool *overLimit) {
     mat_t *tmp;
     do {
         *overLimit = false;
-        mat_smthr_t *smoother = mat_smthr_create_inner(source, target, limit, overLimit);
+        mat_smthr_t *smoother = mat_smthr_create_inner_single(source, target, limit, overLimit);
         mat_smthr_smooth(smoother);
         mat_smthr_destroy(smoother);
 
