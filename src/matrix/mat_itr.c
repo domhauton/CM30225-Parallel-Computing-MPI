@@ -46,6 +46,16 @@ mat_itr_t *mat_itr_init(double *dataPtr, long fullWidth, long areaWidth, long ar
     return matIterator;
 }
 
+mat_itr_t *mat_itr_clone(mat_itr_t* mat_itr_old) {
+    mat_itr_t *matIterator = malloc(sizeof(mat_itr_t));
+    matIterator->currentPtr = mat_itr_old->currentPtr;
+    matIterator->nextRowJump = mat_itr_old->nextRowJump;
+    matIterator->areaEnd = mat_itr_old->areaEnd;
+    matIterator->areaWidth = mat_itr_old->areaWidth;
+    matIterator->rowEnd = mat_itr_old->rowEnd;
+    return matIterator;
+}
+
 /* True if the iterator has more values */
 bool mat_itr_hasNext(mat_itr_t *matIterator) {
     return matIterator != NULL && matIterator->currentPtr < matIterator->areaEnd;

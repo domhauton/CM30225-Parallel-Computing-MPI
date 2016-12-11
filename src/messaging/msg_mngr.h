@@ -16,7 +16,7 @@ void msg_mngr_assign_rows(msg_mngr_t* msg_mngr, int rowIdStart, int rowIdEnd);
 
 void msg_mngr_send_row(msg_mngr_t* msg_mngr, msg_mat_row_t* msg_mat_row);
 
-void msg_mngr_broadcast_overflow(msg_mngr_t* msg_mngr, int smth_rnd);
+void msg_mngr_broadcast_overflow(msg_mngr_t* msg_mngr, int smthr_rnd);
 
 void msg_mngr_destroy(msg_mngr_t* msg_mngr);
 

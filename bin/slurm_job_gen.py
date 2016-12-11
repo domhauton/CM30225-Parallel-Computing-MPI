@@ -6,7 +6,7 @@ import math
 directory = os.path.expanduser('~') + "/jobs"
 
 
-def get_time_estimate(threads, precision, size, job_type):
+def get_time_estimate(size):
     return (((size - 2) * (size - 2) * 3000) / 8000000) + 10
 
 
@@ -56,7 +56,7 @@ jobQueueTime = 0
 jobQueueMaxTime = 6000
 
 currentPrecision = 0.0001
-cuts = 10
+currentCuts = 10
 currentSize = 2048
 jobType = 4
 currentThread = 1
@@ -65,8 +65,8 @@ for jobType in range(1, 5):
     for currentThread in [2 ** j for j in range(0, int(math.log2(multiprocessing.cpu_count())) + 1)]:
         for currentSize in [2 ** j for j in range(5, 13)]:
             job_uid_ctr += 1
-            jobExecutor = get_job_executor(currentThread, currentPrecision, currentSize, jobType, cuts)
-            timeEstimate = get_time_estimate(currentThread, currentPrecision, currentSize, jobType)
+            jobExecutor = get_job_executor(currentThread, currentPrecision, currentSize, jobType, currentCuts)
+            timeEstimate = get_time_estimate(currentSize)
             print(timeEstimate)
             if timeEstimate > jobQueueMaxTime:
                 write_to_file(jobExecutor, job_uid_ctr)

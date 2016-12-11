@@ -24,9 +24,9 @@ void bootstrap(int argc, char *argv[]) {
         printf("For individual calculations use: %s <threads> <size> <precision> <type> <cut>\n", argv[0]);
         printf("  Ctr   |Ty|Size |Thr|Chnk|  Acc   |  Time  |     Parity     |      CRC64     |\n");
         double precision = 0.0001f;
-        for (unsigned int threads = 1; threads <= (sysconf(_SC_NPROCESSORS_ONLN) * 2); threads <<= 1) {
-            for (int matrixSize = (2 << 7); matrixSize <= (2 << 7); matrixSize <<= 1) {
-                bmark_serial(matrixSize, precision);
+        for (int matrixSize = (2 << 7); matrixSize <= (2 << 7); matrixSize <<= 1) {
+            bmark_serial(matrixSize, precision);
+            for (unsigned int threads = 1; threads <= (sysconf(_SC_NPROCESSORS_ONLN) * 2); threads <<= 1) {
                 bmark_pool(matrixSize, precision, threads, 10);
             }
         }

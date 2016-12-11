@@ -40,7 +40,7 @@ typedef struct SPOOL_JOB_SYNC_T {
 } spool_job_sync_t;
 
 typedef struct SPOOL_JOB_T {
-    mat_smthr_t *matSmoother;
+    smoother_t *matSmoother;
     spool_job_t *next;
     spool_job_sync_t *spoolJobSync;
 } spool_job_t;
@@ -57,14 +57,12 @@ void spool_job_add_inner(spool_t *spool, spool_job_t* newSpoolJob) {
     pthread_spin_unlock(&spool->jobQueueAccessLock);
 }
 
-void spool_job_add(spool_t *spool, mat_smthr_t *smoother, spool_job_sync_t *spoolJobSync) {
+void spool_job_add(spool_t *spool, smoother_t *smoother, spool_job_sync_t *spoolJobSync) {
     debug_print("Smoothing Pool\t- DISPATCHER   - Job Add\n");
     spool_job_t *newSpoolJob = malloc(sizeof(spool_job_t));
     newSpoolJob->matSmoother = smoother;
     newSpoolJob->spoolJobSync = spoolJobSync;
     spool_job_add_inner(spool, newSpoolJob);
-    int x = 0;
-    x += 1;
     sem_post(&spool->jobWaitSem);
 }
 
@@ -80,14 +78,13 @@ spool_job_sync_t *spool_job_sync_init(unsigned int count) {
 /* Add a set of jobs to be processed.
         Returns a spool_job_sync_t for synchronisation.
         Destroys list items after processing. */
-spool_job_sync_t *spool_job_add_batch(spool_t *spool, mat_smthr_list_t *smthrList, unsigned int count) {
-    debug_print("Smoothing Pool\t- DISPATCHER   - Submitted %d job/s.\n", count);
-    spool_job_sync_t *jobSync = spool_job_sync_init(count);
-    while (smthrList != NULL) {
-        mat_smthr_list_t *currentSmoothSection = smthrList;
-        spool_job_add(spool, currentSmoothSection->data, jobSync);
-        smthrList = smthrList->next;
-        free(currentSmoothSection);
+spool_job_sync_t *spool_job_add_batch(spool_t *spool, smoother_t *smoother) {
+    unsigned int totalJobCount = smoother_child_jobs(smoother) + 1;
+    debug_print("Smoothing Pool\t- DISPATCHER   - Submitted %d job/s.\n", totalJobCount);
+    spool_job_sync_t *jobSync = spool_job_sync_init(totalJobCount);
+    while (smoother != NULL) {
+        spool_job_add(spool, smoother, jobSync);
+        smoother = smoother_next(smoother);
     }
     return jobSync;
 }
@@ -135,8 +132,8 @@ void *spool_thread_run(void *voidArgs) {
         spool_job_t *smoothJob = spool_job_wait(smoothThread);
         if (smoothJob != NULL) {
             if (smoothJob->matSmoother != NULL) {
-                mat_smthr_smooth(smoothJob->matSmoother);
-                mat_smthr_destroy(smoothJob->matSmoother);
+                smoother_run(smoothJob->matSmoother);
+                smoother_destroy(smoothJob->matSmoother);
             }
             spool_job_sync_complete(smoothJob->spoolJobSync);
             debug_print("Smoothing Pool\t- Thread %ld - Job Complete (Smoothing)\n", syscall(__NR_gettid));
@@ -183,7 +180,7 @@ void spool_worker_remove(spool_t *spool) {
 
 /* Initialises a new smoothing thread pool from the given job list
         jobList can be NULL */
-spool_t *spool_init(spool_job_t *jobList) {
+spool_t *spool_init(spool_job_t *jobList, unsigned int initialWorkerCount) {
     spool_t *spool = malloc(sizeof(spool_t));
     debug_print("Smoothing Pool\t- DISPATCHER   - Initialise Begin\n");
     spool->threadGraveyard = NULL;
@@ -199,6 +196,10 @@ spool_t *spool_init(spool_job_t *jobList) {
         spool->lastJob = spool->lastJob->next;
         sem_post(&spool->jobWaitSem);
         debug_print("Smoothing Pool\t- DISPATCHER   - Initialise Adding Job\n");
+    }
+    debug_print("Smoothing Pool\t- DISPATCHER   - Initialise Workers\n");
+    for(int i = 0; i < initialWorkerCount; i++) {
+        spool_worker_add(spool);
     }
     debug_print("Smoothing Pool\t- DISPATCHER   - Initialise Complete\n");
     return spool;

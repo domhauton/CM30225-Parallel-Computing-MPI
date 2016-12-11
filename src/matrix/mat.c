@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "mat_itr.h"
-#include "mat_smthr.h"
+#include "smoother.h"
 #include "../debug.h"
 
 typedef struct MAT_T {
@@ -44,62 +44,58 @@ mat_itr_edge_t *mat_itr_edge_create(mat_t *matrix) {
         overLimit may be shared between multiple smoothers (thread safe).
         target Matrix *must* have same dimensions as source.
         */
-mat_smthr_t *mat_smthr_create_partial(mat_t *source, mat_t *tmp,
+smoother_t *smoother_create_partial(mat_t *source, mat_t *tmp,
                                       double limit, bool *overLimit,
                                       long x, long y,
-                                      long xSize, long ySize) {
+                                      long xSize, long ySize,
+                                      smoother_t *nextSmoother) {
     mat_itr_t *resItr = mat_itr_create_partial(tmp, x, y, xSize, ySize);
     mat_itr_t *ctrItr = mat_itr_create_partial(source, x, y, xSize, ySize);
     mat_itr_t *topItr = mat_itr_create_partial(source, x - 1, y, xSize, ySize);
     mat_itr_t *botItr = mat_itr_create_partial(source, x + 1, y, xSize, ySize);
     mat_itr_t *lftItr = mat_itr_create_partial(source, x, y - 1, xSize, ySize);
     mat_itr_t *rgtItr = mat_itr_create_partial(source, x, y + 1, xSize, ySize);
-    return mat_smthr_init(resItr, ctrItr, topItr, botItr, lftItr, rgtItr, overLimit, limit);
+    return smoother_init(resItr, ctrItr, topItr, botItr, lftItr, rgtItr, overLimit, limit, nextSmoother);
 }
 
 /* Initialise a smoother for the inside of the matrix (excluding outer edge) */
-mat_smthr_t *mat_smthr_create_inner_single(mat_t *source, mat_t *target, double limit, bool *overLimit) {
+smoother_t *smoother_single_init(mat_t *source, mat_t *target, double limit, bool *overLimit) {
     long itrWidth = target->xSize - 2;
     long itrHeight = target->ySize - 2;
-    return mat_smthr_create_partial(source, target, limit, overLimit, 1, 1, itrWidth, itrHeight);
+    return smoother_create_partial(source, target, limit, overLimit, 1, 1, itrWidth, itrHeight, NULL);
 }
 
 /* Adds inner cut smooth jobs to head of give linked list */
-long mat_smthr_create_inner_multiple(mat_t *source,
+smoother_t *smoother_multiple_init(mat_t *source,
                                      mat_t *tmp,
                                      double limit,
                                      bool *overLimit,
-                                     unsigned int smthrSize,
-                                     mat_smthr_list_t *matSmthrLinkedList){
+                                     unsigned int smthrSize) {
     long sections = (source->ySize - 2) / smthrSize;
     long remainderSection = (source->ySize - 2) % smthrSize;
     debug_print("Splitting %ld matrix into %ld section/s of %d row/s with an extra %ld row section.\n",
                 source->ySize, sections, smthrSize, remainderSection);
     long nextHeight = 1;
-    for(int i = 0; i < sections; i++){
+    smoother_t *currentSmtr = NULL;
+    for (int i = 0; i < sections; i++) {
         debug_print("Section - [%ld:%d]\n", nextHeight, smthrSize);
-        mat_smthr_list_t *newMatSmthrItem = malloc(sizeof(mat_smthr_list_t));
-        newMatSmthrItem->data = mat_smthr_create_partial(source, tmp,
-                                                         limit, overLimit,
-                                                         1, nextHeight,
-                                                         source->xSize - 2, smthrSize);
-        matSmthrLinkedList->next = newMatSmthrItem;
-        matSmthrLinkedList = matSmthrLinkedList->next;
+        currentSmtr = smoother_create_partial(source, tmp,
+                                               limit, overLimit,
+                                               1, nextHeight,
+                                               source->xSize - 2, smthrSize,
+                                               currentSmtr);
         nextHeight += smthrSize;
     }
-    if(remainderSection != 0) {
+    if (remainderSection != 0) {
         debug_print("Section - [%ld:%ld]\n", nextHeight, remainderSection);
-        mat_smthr_list_t *newMatSmthrItem = malloc(sizeof(mat_smthr_list_t));
-        newMatSmthrItem->data = mat_smthr_create_partial(source, tmp,
-                                                         limit, overLimit,
-                                                         1, nextHeight,
-                                                         source->xSize - 2, remainderSection);
-        matSmthrLinkedList->next = newMatSmthrItem;
-        matSmthrLinkedList = matSmthrLinkedList->next;
+        currentSmtr = smoother_create_partial(source, tmp,
+                                               limit, overLimit,
+                                               1, nextHeight,
+                                               source->xSize - 2, remainderSection,
+                                               currentSmtr);
     }
-    matSmthrLinkedList->next = NULL;
     debug_print("Splitting Complete.\n");
-    return remainderSection == 0 ? sections : sections + 1;
+    return currentSmtr;
 }
 
 /* Smooths the inside (exclude outer edge) of the given matrix until it changes < limit. */
@@ -109,9 +105,9 @@ mat_t *mat_smooth(mat_t *source, mat_t *target, double limit, bool *overLimit) {
     mat_t *tmp;
     do {
         *overLimit = false;
-        mat_smthr_t *smoother = mat_smthr_create_inner_single(source, target, limit, overLimit);
-        mat_smthr_smooth(smoother);
-        mat_smthr_destroy(smoother);
+        smoother_t *smoother = smoother_single_init(source, target, limit, overLimit);
+        smoother_run(smoother);
+        smoother_destroy(smoother);
 
         tmp = target;
         target = source;
@@ -123,7 +119,7 @@ mat_t *mat_smooth(mat_t *source, mat_t *target, double limit, bool *overLimit) {
 
     printf("%08li,", ctr);
 
-    return resultFlipped ? source : target;
+    return resultFlipped ? target : source;
 }
 
 /* Used for type punning between a double and a unsigned long long int */
@@ -135,8 +131,8 @@ union {
 /* Calculates a 64 byte (C99) parity of the given matrix */
 unsigned long long int mat_parity(mat_t *matrix) {
     unsigned long long int currentParity = 0ULL;
-    double *endPtr = matrix->data + matrix->ySize*matrix->ySize;
-    for(double *tmpPtr = matrix->data; tmpPtr < endPtr; tmpPtr++) {
+    double *endPtr = matrix->data + matrix->ySize * matrix->ySize;
+    for (double *tmpPtr = matrix->data; tmpPtr < endPtr; tmpPtr++) {
         double_ulld_punner_u.d = *tmpPtr;
         currentParity ^= double_ulld_punner_u.ll;
     }
@@ -146,8 +142,8 @@ unsigned long long int mat_parity(mat_t *matrix) {
 /* Calculates a 64 byte crc of the given Matrix */
 unsigned long long int mat_crc64(mat_t *matrix) {
     unsigned long long int currentCRC = 0ULL;
-    double *endPtr = matrix->data + matrix->ySize*matrix->ySize;
-    for(double *tmpPtr = matrix->data; tmpPtr < endPtr; tmpPtr++) {
+    double *endPtr = matrix->data + matrix->ySize * matrix->ySize;
+    for (double *tmpPtr = matrix->data; tmpPtr < endPtr; tmpPtr++) {
         double_ulld_punner_u.d = *tmpPtr;
         currentCRC += double_ulld_punner_u.ll;
     }

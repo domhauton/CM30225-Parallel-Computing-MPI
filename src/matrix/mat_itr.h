@@ -13,6 +13,8 @@ typedef struct MAT_ITR_EDGE_T mat_itr_edge_t;
 
 mat_itr_t *mat_itr_init(double *dataPtr, long fullWidth, long areaWidth, long areaHeight);
 
+mat_itr_t *mat_itr_clone(mat_itr_t* mat_itr_old);
+
 double *mat_itr_next(mat_itr_t *matIterator);
 
 bool mat_itr_hasNext(mat_itr_t *matIterator);

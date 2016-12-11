@@ -6,7 +6,7 @@
 #define PARALLEL_COMPUTATION_CW1_RELAXATIONMATRIX_H
 
 #include "mat_itr.h"
-#include "mat_smthr.h"
+#include "smoother.h"
 
 typedef struct MAT_T mat_t;
 
@@ -20,15 +20,14 @@ mat_itr_edge_t *mat_itr_edge_create(mat_t *matrix);
 
 void mat_copy_edge(mat_t *source, mat_t *target);
 
-mat_smthr_t *mat_smthr_create_inner_single(mat_t *source, mat_t *target, double limit, bool *overLimit);
+smoother_t *smoother_single_init(mat_t *source, mat_t *target,
+                                   double limit, bool *overLimit);
 
-void mat_smthr_create_inner_rowcut(mat_t *source, mat_t *tmp,
-                                   double limit, bool *overLimit,
-                                   unsigned int sections, mat_smthr_t **smoothers);
-
-long mat_smthr_get(mat_t *source, mat_t *tmp,
-                   double limit, bool *overLimit,
-                   unsigned int smthrSize, mat_smthr_list_t *matSmthrLinkedList);
+smoother_t *smoother_multiple_init(mat_t *source,
+                                     mat_t *tmp,
+                                     double limit,
+                                     bool *overLimit,
+                                     unsigned int smthrSize);
 
 mat_t *mat_smooth(mat_t *source, mat_t *target, double limit, bool *overLimit);
 

@@ -7,24 +7,28 @@
 
 #include "mat_itr.h"
 
-typedef struct MAT_SMTHR_T mat_smthr_t;
+typedef struct smoother_T smoother_t;
 
-typedef struct MAT_SMTHR_LIST_T {
-    mat_smthr_t *data;
-    struct MAT_SMTHR_LIST_T *next;
-} mat_smthr_list_t;
-
-mat_smthr_t *mat_smthr_init(mat_itr_t *target,
+smoother_t *smoother_init(mat_itr_t *target,
                             mat_itr_t *srcCenter,
                             mat_itr_t *srcUp,
                             mat_itr_t *srcDown,
                             mat_itr_t *srcLeft,
                             mat_itr_t *srcRight,
                             bool *overLimit,
-                            double diffLimit);
+                            double diffLimit,
+                            smoother_t *next);
 
-void mat_smthr_smooth(mat_smthr_t *matSmoother);
+smoother_t *smoother_clone(smoother_t* smoother_old);
 
-void mat_smthr_destroy(mat_smthr_t *matSmoother);
+smoother_t *smoother_next(smoother_t *matSmoother);
+
+unsigned int smoother_child_jobs(smoother_t *matSmoother);
+
+void smoother_run(smoother_t *matSmoother);
+
+void smoother_destroy(smoother_t *matSmoother);
+
+void smoother_destroy_chain(smoother_t *smoother);
 
 #endif //PARALLEL_COMPUTATION_CW1_MATSMOOTHER_H
