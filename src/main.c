@@ -43,9 +43,10 @@ int main(int argc, char *argv[]) {
 
     if(isMaster) {
         printf("Starting Master Node.\n");
-        bootstrap(argc, argv);
+        //bootstrap(argc, argv);
     } else {
         printf("Starting Slave Node.\n");
+
     }
     MPI_Finalize();
     return 0;

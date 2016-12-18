@@ -3,13 +3,17 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/debug.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/spool/spool_task_runner.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/spool/spool_task.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/spool/spool_task.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/spool/spool.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/spool/spool_task_runner.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/spool/spool.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/dispatcher/dispatcher.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/dispatcher/dispatcher.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/messaging/msg_mngr.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/messaging/msg_mngr.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/spool/dispatcher.c" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/spool/spool.c" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/spool/dispatcher.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/spool/spool.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/matrix/mat_factory.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/matrix/smoother.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/matrix/mat.h" isTestSource="false" />

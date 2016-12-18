@@ -9,7 +9,8 @@
 #include "mat.h"
 #include "mat_factory.h"
 #include "bmark.h"
-#include "../spool/dispatcher.h"
+#include "../spool/spool_task.h"
+#include "../spool/spool_task_runner.h"
 
 double bmark_serial(int size, double precision) {
     struct timeval tv_start, tv_end;
@@ -42,16 +43,15 @@ double bmark_pool(int size, double precision, unsigned int threads, unsigned int
     mat_t *matrix2 = mat_factory_init_random(size, size);
     bool overLimit = true;
     spool_t *mainSpool = spool_init(NULL, threads);
-    dispatcher_task_t *dispatcher_task = dispatcher_task_init(matrix1, matrix2, precision, &overLimit, cut);
+    spool_task_t *spool_task = spool_task_init(matrix1, matrix2, precision, &overLimit, cut, NULL);
+    spool_t *dispatcher = spool_init(mainSpool, spool_task);
 
     gettimeofday(&tv_start, NULL);
-    dispatcher_task_run(dispatcher_task, mainSpool);
+    spool_run(dispatcher);
     gettimeofday(&tv_end, NULL);
 
-    mat_t *retMat = dispatcher_task_mat(dispatcher_task);
-    unsigned int loopCtr = dispatcher_task_loop_count(dispatcher_task);
-
-
+    mat_t *retMat = spool_task_mat(spool_task);
+    unsigned int loopCtr = spool_task_loop_count(spool_task);
 
     double time_spent = (double) (tv_end.tv_usec - tv_start.tv_usec) / 1000000
                         + (double) (tv_end.tv_sec - tv_start.tv_sec);
@@ -63,7 +63,8 @@ double bmark_pool(int size, double precision, unsigned int threads, unsigned int
 
     printf("%08d,01,%05d,%03d,%04d,%f,%f,%016llx,%016llx\n", loopCtr, size, threads, chunks, precision, time_spent, parity, crc64);
 
-    dispatcher_task_destroy(dispatcher_task);
+    spool_task_destroy(spool_task);
+    spool_destroy(dispatcher);
     spool_destroy(mainSpool);
     mat_destroy(matrix1);
     mat_destroy(matrix2);
