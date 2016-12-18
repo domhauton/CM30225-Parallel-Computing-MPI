@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include "matrix/bmark.h"
 #include <mpi.h>
-#include <jmorecfg.h>
+#include <stdbool.h>
 
 void bootstrap(int argc, char *argv[]) {
     if (argc == 6) {
@@ -39,9 +39,9 @@ int main(int argc, char *argv[]) {
     MPI_Comm_rank(MPI_COMM_WORLD, &node);
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
     printf("Node %d in [0,%d)\n", node, totalNodes);
-    boolean isMaster = node == 0;
+    bool isMaster = node == 0;
 
-    if(isMaster) {
+    if (isMaster) {
         printf("Starting Master Node.\n");
         bootstrap(argc, argv);
     } else {
