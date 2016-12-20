@@ -28,20 +28,35 @@ mat_t *mat_factory_init_empty(long xSize, long ySize) {
 mat_t *mat_factory_init_seeded_skip(long xSize, long ySize, int skip) {
     mat_t *matrix = mat_factory_init_empty(xSize, ySize);
     srand48(RNG_SEED);
-    for(int i = 0; i < skip*xSize; i++) {
+    //Skip all seeded before
+    for(int i = 0; i < xSize * skip; i++) {
         drand48();
     }
 
-    mat_itr_edge_t *matEdgeIterator = mat_itr_edge_create(matrix);
-    while(mat_itr_edge_hasNext(matEdgeIterator)) {
-        *mat_itr_edge_next(matEdgeIterator) = drand48();
+    mat_itr_t *matItr = mat_itr_create_partial(matrix, 0, 0, xSize, ySize);
+    while(mat_itr_hasNext(matItr)) {
+        *mat_itr_next(matItr) = drand48();
     }
-    mat_itr_edge_destroy(matEdgeIterator);
+    mat_itr_destroy(matItr);
 
     return matrix;
 }
 
 /* Creates a new matrix with seeded random values */
-mat_t *mat_factory_init_seeded(long xSize, long ySize) {
-    return mat_factory_init_seeded_skip(xSize, ySize, 0);
+mat_t *mat_factory_init_seeded(int xSize, int ySize) {
+    int node, totalNodes;
+    MPI_Comm_rank(MPI_COMM_WORLD, &node);
+    MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
+    int globalWorkingSize = ySize-2;
+    int localWorkingSize = globalWorkingSize/totalNodes;
+    int remainder = globalWorkingSize%totalNodes;
+    if(remainder > node) {
+        localWorkingSize++;
+    }
+    int extraRows = remainder > node ? node : remainder;
+    int skipRows = (localWorkingSize*node) + extraRows;
+    printf("Node %d - Extra rows: %d\n", node, extraRows);
+    int localYSize = localWorkingSize + 2;
+    printf("Node %d work start %d for %d rows. Storing start %d for %d rows\n", node, skipRows+1, localWorkingSize, skipRows, localYSize);
+    return mat_factory_init_seeded_skip(xSize, localYSize, skipRows);
 }

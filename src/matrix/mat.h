@@ -5,12 +5,15 @@
 #ifndef PARALLEL_COMPUTATION_CW1_RELAXATIONMATRIX_H
 #define PARALLEL_COMPUTATION_CW1_RELAXATIONMATRIX_H
 
+#include <mpi.h>
 #include "mat_itr.h"
 #include "smoother.h"
 
 typedef struct MAT_T mat_t;
 
-mat_t *mat_init(double *values, long xSize, long ySize);
+mat_t *mat_init(double *values, int xSize, int ySize);
+
+mat_t *mat_init_clone_edge(mat_t *matrix);
 
 double *mat_data_ptr(mat_t *matrix, long x, long y);
 
@@ -33,11 +36,17 @@ mat_t *mat_smooth(mat_t *source, mat_t *target, double limit, bool *overLimit);
 
 void mat_print(mat_t *matrix);
 
+void mat_print_mpi(mat_t *matrix);
+
 bool mat_equals(mat_t *matrix1, mat_t *matrix2);
 
 unsigned long long int mat_parity(mat_t *matrix);
 
 unsigned long long int mat_crc64(mat_t *matrix);
+
+int mat_shareRows(mat_t* mat, MPI_Request* mpi_request);
+
+int mat_acceptEdgeRows(mat_t* mat, MPI_Request* mpi_request);
 
 void mat_destroy(mat_t *matrix);
 

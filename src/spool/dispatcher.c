@@ -37,6 +37,23 @@ mat_t *dispatcher_task_mat(dispatcher_task_t* dispatcher_task) {
     return dispatcher_task->loopCtr % 2 == 0 ? dispatcher_task->srcMatrix : dispatcher_task->tmpMatrix;
 }
 
+void dispatcher_mpi_share(dispatcher_task_t *dispatcher_task) {
+    MPI_Request mpiRequest[5];
+    bool globallyOverLimit;
+    mat_t *currentMat = dispatcher_task_mat(dispatcher_task);
+
+    int cnt = 0;
+    MPI_Iallreduce(dispatcher_task->active, &globallyOverLimit, 1,
+                   MPI_C_BOOL, MPI_LOR,
+                   MPI_COMM_WORLD, mpiRequest);
+    cnt++;
+    cnt += mat_shareRows(currentMat, mpiRequest+cnt);
+    cnt += mat_acceptEdgeRows(currentMat, mpiRequest+cnt);
+
+    MPI_Waitall(cnt, mpiRequest, MPI_STATUSES_IGNORE);
+    *dispatcher_task->active = globallyOverLimit;
+}
+
 void dispatcher_task_run(dispatcher_task_t *dispatcher_task, spool_t *spool) {
     do {
         *dispatcher_task->active = false;
@@ -46,9 +63,8 @@ void dispatcher_task_run(dispatcher_task_t *dispatcher_task, spool_t *spool) {
         spool_job_sync_wait(spoolJobSync);
         spool_job_sync_destroy(spoolJobSync);
 
-
-
         dispatcher_task->loopCtr++;
+        dispatcher_mpi_share(dispatcher_task);
     } while (*dispatcher_task->active);
 }
 

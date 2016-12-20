@@ -5,9 +5,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <mpi.h>
+#include <zconf.h>
 #include "mat_itr.h"
 #include "smoother.h"
 #include "../debug.h"
+#include "mat_factory.h"
 
 typedef struct MAT_T {
     int xSize, ySize;
@@ -132,16 +134,83 @@ union {
 /* Calculates a 64 byte (C99) parity of the given matrix */
 unsigned long long int mat_parity(mat_t *matrix) {
     unsigned long long int currentParity = 0ULL;
-    double *endPtr = matrix->data + matrix->ySize * matrix->ySize;
-    for (double *tmpPtr = matrix->data; tmpPtr < endPtr; tmpPtr++) {
-        double_ulld_punner_u.d = *tmpPtr;
-        currentParity ^= double_ulld_punner_u.ll;
+    int node, totalNodes;
+    MPI_Comm_rank(MPI_COMM_WORLD, &node);
+    MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
+
+    if(node == 0){
+        double *topPtr = mat_data_ptr(matrix, 0, 0);
+        double *topEndPtr = mat_data_ptr(matrix, matrix->xSize, 0);
+        while (topPtr < topEndPtr) {
+            double_ulld_punner_u.d = *topPtr;
+            currentParity ^= double_ulld_punner_u.ll;
+            topPtr++;
+        }
     }
-    return currentParity;
+    if(node == totalNodes - 1) {
+        double *botPtr = mat_data_ptr(matrix, 0, matrix->ySize-1);
+        double *botEndPtr = mat_data_ptr(matrix, matrix->xSize, matrix->ySize-1);
+        while (botPtr < botEndPtr) {
+            double_ulld_punner_u.d = *botPtr;
+            currentParity ^= double_ulld_punner_u.ll;
+            botPtr++;
+        }
+    }
+    double *midPtr = mat_data_ptr(matrix, 0, 1);
+    double *midEndPtr = mat_data_ptr(matrix, matrix->xSize, matrix->ySize-2);
+    while (midPtr < midEndPtr) {
+        double_ulld_punner_u.d = *midPtr;
+        currentParity ^= double_ulld_punner_u.ll;
+        midPtr++;
+    }
+    unsigned long long int totalParity;
+    MPI_Allreduce(&currentParity, &totalParity, 1,
+                   MPI_UNSIGNED_LONG_LONG, MPI_BXOR,
+                   MPI_COMM_WORLD);
+    return totalParity;
+}
+
+/* Calculates a 64 byte (C99) parity of the given matrix */
+unsigned long long int mat_crc64(mat_t *matrix) {
+    unsigned long long int currentCRC = 0ULL;
+    int node, totalNodes;
+    MPI_Comm_rank(MPI_COMM_WORLD, &node);
+    MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
+
+    if(node == 0){
+        double *topPtr = mat_data_ptr(matrix, 0, 0);
+        double *topEndPtr = mat_data_ptr(matrix, matrix->xSize, 0);
+        while (topPtr < topEndPtr) {
+            double_ulld_punner_u.d = *topPtr;
+            currentCRC += double_ulld_punner_u.ll;
+            topPtr++;
+        }
+    }
+    if(node == totalNodes - 1) {
+        double *botPtr = mat_data_ptr(matrix, 0, matrix->ySize-1);
+        double *botEndPtr = mat_data_ptr(matrix, matrix->xSize, matrix->ySize-1);
+        while (botPtr < botEndPtr) {
+            double_ulld_punner_u.d = *botPtr;
+            currentCRC += double_ulld_punner_u.ll;
+            botPtr++;
+        }
+    }
+    double *midPtr = mat_data_ptr(matrix, 0, 1);
+    double *midEndPtr = mat_data_ptr(matrix, matrix->xSize, matrix->ySize-2);
+    while (midPtr < midEndPtr) {
+        double_ulld_punner_u.d = *midPtr;
+        currentCRC += double_ulld_punner_u.ll;
+        midPtr++;
+    }
+    unsigned long long int totalCRC;
+    MPI_Allreduce(&currentCRC, &totalCRC, 1,
+                  MPI_UNSIGNED_LONG_LONG, MPI_BXOR,
+                  MPI_COMM_WORLD);
+    return totalCRC;
 }
 
 /* Calculates a 64 byte crc of the given Matrix */
-unsigned long long int mat_crc64(mat_t *matrix) {
+unsigned long long int mat_crc64_local(mat_t *matrix) {
     unsigned long long int currentCRC = 0ULL;
     double *endPtr = matrix->data + matrix->ySize * matrix->ySize;
     for (double *tmpPtr = matrix->data; tmpPtr < endPtr; tmpPtr++) {
@@ -176,6 +245,14 @@ void mat_print(mat_t *matrix) {
     }
 }
 
+void mat_print_mpi(mat_t *matrix) {
+    int node, totalNodes;
+    MPI_Comm_rank(MPI_COMM_WORLD, &node);
+    MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
+    sleep((unsigned int) node + 1);
+    mat_print(matrix);
+}
+
 /* Compares the two matrices for equality */
 bool mat_equals(mat_t *matrix1, mat_t *matrix2) {
     if (matrix1->ySize == matrix2->ySize && matrix1->xSize == matrix2->xSize) {
@@ -193,39 +270,46 @@ bool mat_equals(mat_t *matrix1, mat_t *matrix2) {
     }
 }
 
-void mat_shareRows(mat_t* mat) {
+int mat_shareRows(mat_t* mat, MPI_Request* mpi_request) {
     int node, totalNodes;
     MPI_Comm_rank(MPI_COMM_WORLD, &node);
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
-    if(node > 0 && node < totalNodes - 1) {
-        MPI_Request request[2];
-        MPI_Status status[2];
+    int retInt = 0;
+    if(node > 0) {
         double* top = mat_data_ptr(mat, 0, 1);
-        double* bottom = mat_data_ptr(mat, 0, mat->ySize - 2);
-        MPI_Isend(top, mat->xSize, MPI_DOUBLE, node-1, 1, MPI_COMM_WORLD, request);
-        MPI_Isend(bottom, mat->xSize, MPI_DOUBLE, node+1, 2, MPI_COMM_WORLD, &request[1]);
-        MPI_Waitall(2, request, status);
-    } else if(node > 0) {
-        double* top = mat_data_ptr(mat, 0, 1);
-        MPI_Send(top, mat->xSize, MPI_DOUBLE, node-1, 1, MPI_COMM_WORLD);
-    } else {
-        double* bottom = mat_data_ptr(mat, 0, mat->ySize - 2);
-        MPI_Send(bottom, mat->xSize, MPI_DOUBLE, node+1, 2, MPI_COMM_WORLD);
+        MPI_Isend(top, mat->xSize, MPI_DOUBLE, node-1, 0, MPI_COMM_WORLD, mpi_request++);
+        retInt++;
     }
+    if (node < totalNodes - 1){
+        double* bottom = mat_data_ptr(mat, 0, mat->ySize - 2);
+        MPI_Isend(bottom, mat->xSize, MPI_DOUBLE, node+1, 0, MPI_COMM_WORLD, mpi_request);
+        retInt++;
+    }
+    return retInt;
 }
 
-void mat_acceptEdgeRows(mat_t* mat) {
+int mat_acceptEdgeRows(mat_t* mat, MPI_Request* mpi_request) {
     int node, totalNodes;
     MPI_Comm_rank(MPI_COMM_WORLD, &node);
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
-    if(node != 0) {
+    int retInt = 0;
+    if(node > 0) {
         double* top = mat_data_ptr(mat, 0, 0);
-        MPI_Recv(top, mat->xSize, MPI_DOUBLE, node+1, 2, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Irecv(top, mat->xSize, MPI_DOUBLE, node-1, MPI_ANY_TAG, MPI_COMM_WORLD, mpi_request++);
+        retInt++;
     }
-    if(node == totalNodes - 1) {
+    if(node < totalNodes - 1) {
         double* bottom = mat_data_ptr(mat, 0, mat->ySize - 1);
-        MPI_Recv(bottom, mat->xSize, MPI_DOUBLE, node-1, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Irecv(bottom, mat->xSize, MPI_DOUBLE, node+1, MPI_ANY_TAG, MPI_COMM_WORLD, mpi_request);
+        retInt++;
     }
+    return retInt;
+}
+
+mat_t *mat_init_clone_edge(mat_t *matrix) {
+    mat_t* clone = mat_factory_init_empty(matrix->xSize, matrix->ySize);
+    mat_copy_edge(matrix, clone);
+    return clone;
 }
 
 /* Frees the given matrix from memory. Matrix must not be used afterwards. */
