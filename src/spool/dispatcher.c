@@ -45,6 +45,9 @@ void dispatcher_task_run(dispatcher_task_t *dispatcher_task, spool_t *spool) {
         spool_job_sync_t *spoolJobSync = spool_job_add_batch(spool, jobList);
         spool_job_sync_wait(spoolJobSync);
         spool_job_sync_destroy(spoolJobSync);
+
+
+
         dispatcher_task->loopCtr++;
     } while (*dispatcher_task->active);
 }

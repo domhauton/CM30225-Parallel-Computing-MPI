@@ -25,9 +25,12 @@ mat_t *mat_factory_init_empty(long xSize, long ySize) {
 }
 
 /* Creates a new matrix with seeded random values */
-mat_t *mat_factory_init_random(long xSize, long ySize) {
+mat_t *mat_factory_init_seeded_skip(long xSize, long ySize, int skip) {
     mat_t *matrix = mat_factory_init_empty(xSize, ySize);
     srand48(RNG_SEED);
+    for(int i = 0; i < skip*xSize; i++) {
+        drand48();
+    }
 
     mat_itr_edge_t *matEdgeIterator = mat_itr_edge_create(matrix);
     while(mat_itr_edge_hasNext(matEdgeIterator)) {
@@ -36,4 +39,9 @@ mat_t *mat_factory_init_random(long xSize, long ySize) {
     mat_itr_edge_destroy(matEdgeIterator);
 
     return matrix;
+}
+
+/* Creates a new matrix with seeded random values */
+mat_t *mat_factory_init_seeded(long xSize, long ySize) {
+    return mat_factory_init_seeded_skip(xSize, ySize, 0);
 }

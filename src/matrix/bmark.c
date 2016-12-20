@@ -14,8 +14,8 @@
 double bmark_serial(int size, double precision) {
     struct timeval tv_start, tv_end;
 
-    mat_t *matrix1 = mat_factory_init_random(size, size);
-    mat_t *matrix2 = mat_factory_init_random(size, size);
+    mat_t *matrix1 = mat_factory_init_seeded(size, size);
+    mat_t *matrix2 = mat_factory_init_seeded(size, size);
     bool *overLimit = malloc(sizeof(int));
     gettimeofday(&tv_start, NULL);
     mat_t *retMat = mat_smooth(matrix1, matrix2, precision, overLimit);
@@ -38,8 +38,8 @@ double bmark_serial(int size, double precision) {
 double bmark_pool(int size, double precision, unsigned int threads, unsigned int cut) {
     struct timeval tv_start, tv_end;
 
-    mat_t *matrix1 = mat_factory_init_random(size, size);
-    mat_t *matrix2 = mat_factory_init_random(size, size);
+    mat_t *matrix1 = mat_factory_init_seeded(size, size);
+    mat_t *matrix2 = mat_factory_init_seeded(size, size);
     bool overLimit = true;
     spool_t *mainSpool = spool_init(NULL, threads);
     dispatcher_task_t *dispatcher_task = dispatcher_task_init(matrix1, matrix2, precision, &overLimit, cut);

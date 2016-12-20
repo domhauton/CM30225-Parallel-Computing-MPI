@@ -6,6 +6,13 @@
 #include <stdbool.h>
 
 void bootstrap(int argc, char *argv[]) {
+    int tmp = 0;
+
+    printf("Master sleeping.\n");
+    sleep(3);
+    printf("Master waiting.\n");
+    MPI_Recv(&tmp, 1, MPI_INT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    printf("Master received: %d\n", tmp);
     if (argc == 6) {
         unsigned int threads = (unsigned int) atoi(argv[1]);
         int size = atoi(argv[2]);
@@ -46,6 +53,15 @@ int main(int argc, char *argv[]) {
         bootstrap(argc, argv);
     } else {
         printf("Starting Slave Node.\n");
+        int tmp = 0;
+        MPI_Request mpi_request;
+        MPI_Status mpi_status;
+        printf("Slave - Sending\n");
+
+        MPI_Isend(&tmp, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &mpi_request);
+        printf("Slave - Sent\n");
+        MPI_Wait(&mpi_request, &mpi_status);
+        printf("Slave - Receive Confirmed\n");
     }
     MPI_Finalize();
     return 0;

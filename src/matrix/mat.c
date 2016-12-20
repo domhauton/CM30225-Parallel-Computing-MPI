@@ -4,17 +4,18 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <mpi.h>
 #include "mat_itr.h"
 #include "smoother.h"
 #include "../debug.h"
 
 typedef struct MAT_T {
-    long xSize, ySize;
+    int xSize, ySize;
     double *data;
 } mat_t;
 
 /* Creates the matrix and allocates values */
-mat_t *mat_init(double *values, long xSize, long ySize) {
+mat_t *mat_init(double *values, int xSize, int ySize) {
     mat_t *matrix = malloc(sizeof(mat_t));
     matrix->data = values;
     matrix->xSize = xSize;
@@ -73,7 +74,7 @@ smoother_t *smoother_multiple_init(mat_t *source,
                                      unsigned int smthrSize) {
     long sections = (source->ySize - 2) / smthrSize;
     long remainderSection = (source->ySize - 2) % smthrSize;
-    debug_print("Splitting %ld matrix into %ld section/s of %d row/s with an extra %ld row section.\n",
+    debug_print("Splitting %d matrix into %ld section/s of %d row/s with an extra %ld row section.\n",
                 source->ySize, sections, smthrSize, remainderSection);
     long nextHeight = 1;
     smoother_t *currentSmtr = NULL;
@@ -189,6 +190,41 @@ bool mat_equals(mat_t *matrix1, mat_t *matrix2) {
         return match;
     } else {
         return false;
+    }
+}
+
+void mat_shareRows(mat_t* mat) {
+    int node, totalNodes;
+    MPI_Comm_rank(MPI_COMM_WORLD, &node);
+    MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
+    if(node > 0 && node < totalNodes - 1) {
+        MPI_Request request[2];
+        MPI_Status status[2];
+        double* top = mat_data_ptr(mat, 0, 1);
+        double* bottom = mat_data_ptr(mat, 0, mat->ySize - 2);
+        MPI_Isend(top, mat->xSize, MPI_DOUBLE, node-1, 1, MPI_COMM_WORLD, request);
+        MPI_Isend(bottom, mat->xSize, MPI_DOUBLE, node+1, 2, MPI_COMM_WORLD, &request[1]);
+        MPI_Waitall(2, request, status);
+    } else if(node > 0) {
+        double* top = mat_data_ptr(mat, 0, 1);
+        MPI_Send(top, mat->xSize, MPI_DOUBLE, node-1, 1, MPI_COMM_WORLD);
+    } else {
+        double* bottom = mat_data_ptr(mat, 0, mat->ySize - 2);
+        MPI_Send(bottom, mat->xSize, MPI_DOUBLE, node+1, 2, MPI_COMM_WORLD);
+    }
+}
+
+void mat_acceptEdgeRows(mat_t* mat) {
+    int node, totalNodes;
+    MPI_Comm_rank(MPI_COMM_WORLD, &node);
+    MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
+    if(node != 0) {
+        double* top = mat_data_ptr(mat, 0, 0);
+        MPI_Recv(top, mat->xSize, MPI_DOUBLE, node+1, 2, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
+    if(node == totalNodes - 1) {
+        double* bottom = mat_data_ptr(mat, 0, mat->ySize - 1);
+        MPI_Recv(bottom, mat->xSize, MPI_DOUBLE, node-1, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
 }
 
