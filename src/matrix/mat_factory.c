@@ -7,10 +7,11 @@
 #include <string.h>
 #include "mat.h"
 
+#define ROOT_RANK 0
 const long RNG_SEED = 31413241L;
 
 /* Creates a new matrix full of zero values */
-mat_t *mat_factory_init_empty(long xSize, long ySize) {
+mat_t *mat_factory_init_empty(int xSize, int ySize) {
     void *data = NULL;
     int success = posix_memalign( &data, 64 , sizeof(double) * xSize * ySize) == 0;
     if(success) {
@@ -25,38 +26,45 @@ mat_t *mat_factory_init_empty(long xSize, long ySize) {
 }
 
 /* Creates a new matrix with seeded random values */
-mat_t *mat_factory_init_seeded_skip(long xSize, long ySize, int skip) {
+mat_t *mat_factory_init_seeded(int xSize, int ySize) {
     mat_t *matrix = mat_factory_init_empty(xSize, ySize);
     srand48(RNG_SEED);
-    //Skip all seeded before
-    for(int i = 0; i < xSize * skip; i++) {
-        drand48();
-    }
 
-    mat_itr_t *matItr = mat_itr_create_partial(matrix, 0, 0, xSize, ySize);
-    while(mat_itr_hasNext(matItr)) {
-        *mat_itr_next(matItr) = drand48();
+    mat_itr_edge_t *matEdgeIterator = mat_itr_edge_create(matrix);
+    while(mat_itr_edge_hasNext(matEdgeIterator)) {
+        *mat_itr_edge_next(matEdgeIterator) = drand48();
     }
-    mat_itr_destroy(matItr);
+    mat_itr_edge_destroy(matEdgeIterator);
 
     return matrix;
 }
 
+void calc_node_compute_size(int *count, int *displacement, int nodeCount, int computeHeight, int rowWidth) {
+    //printf("%d/%d=%d\n", computeHeight, nodeCount, computeHeight/nodeCount);
+    //printf("%dmod%d=%d\n", computeHeight, nodeCount, computeHeight%nodeCount);
+    int minJobSize = computeHeight/nodeCount;
+    int processesWithExtra = computeHeight%nodeCount;
+    int currentDisplacement = 0;
+    for(int i = 0; i < nodeCount; i++) {
+        int jobSize = (minJobSize + (i<processesWithExtra ? 1 : 0)) * rowWidth;
+        *displacement++ = currentDisplacement;
+        *count++ = jobSize + (2 * rowWidth);
+        currentDisplacement += jobSize;
+    }
+}
+
 /* Creates a new matrix with seeded random values */
-mat_t *mat_factory_init_seeded(int xSize, int ySize) {
+mat_t *mat_scatter(mat_t *mat, int xSize, int ySize) {
     int node, totalNodes;
     MPI_Comm_rank(MPI_COMM_WORLD, &node);
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
-    int globalWorkingSize = ySize-2;
-    int localWorkingSize = globalWorkingSize/totalNodes;
-    int remainder = globalWorkingSize%totalNodes;
-    if(remainder > node) {
-        localWorkingSize++;
-    }
-    int extraRows = remainder > node ? node : remainder;
-    int skipRows = (localWorkingSize*node) + extraRows;
-    printf("Node %d - Extra rows: %d\n", node, extraRows);
-    int localYSize = localWorkingSize + 2;
-    printf("Node %d work start %d for %d rows. Storing start %d for %d rows\n", node, skipRows+1, localWorkingSize, skipRows, localYSize);
-    return mat_factory_init_seeded_skip(xSize, localYSize, skipRows);
+    int displacement[totalNodes];
+    int count[totalNodes];
+    calc_node_compute_size(count, displacement, totalNodes, ySize-2, xSize);
+    mat_t *localMat = mat_factory_init_empty(xSize, count[node]/xSize);
+    MPI_Scatterv(
+            mat_data_ptr(mat, 0, 0), count, displacement, MPI_DOUBLE,
+            mat_data_ptr(localMat, 0, 0), count[node], MPI_DOUBLE,
+            ROOT_RANK, MPI_COMM_WORLD);
+    return localMat;
 }

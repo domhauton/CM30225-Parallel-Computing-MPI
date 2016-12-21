@@ -31,3 +31,5 @@
 # Debug files
 *.dSYM/
 *.su
+bin/parallel_computation_cw2
+cmake_tmp/

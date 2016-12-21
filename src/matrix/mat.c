@@ -28,6 +28,9 @@ mat_t *mat_init(double *values, int xSize, int ySize) {
 /* Returns a matrix data pointer at the given coordinates
         Out of bounds coordinates will result in undefined behaviour */
 double *mat_data_ptr(mat_t *matrix, long x, long y) {
+    if(matrix == NULL) {
+        return NULL;
+    }
     return matrix->data + x + (matrix->xSize * y);
 }
 
@@ -139,30 +142,27 @@ unsigned long long int mat_parity(mat_t *matrix) {
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
 
     if(node == 0){
-        double *topPtr = mat_data_ptr(matrix, 0, 0);
-        double *topEndPtr = mat_data_ptr(matrix, matrix->xSize, 0);
-        while (topPtr < topEndPtr) {
-            double_ulld_punner_u.d = *topPtr;
+        mat_itr_t* itr = mat_itr_create_partial(matrix, 0, 0, matrix->xSize, 1);
+        while (mat_itr_hasNext(itr)) {
+            double_ulld_punner_u.d = *mat_itr_next(itr);
             currentParity ^= double_ulld_punner_u.ll;
-            topPtr++;
         }
+        mat_itr_destroy(itr);
     }
     if(node == totalNodes - 1) {
-        double *botPtr = mat_data_ptr(matrix, 0, matrix->ySize-1);
-        double *botEndPtr = mat_data_ptr(matrix, matrix->xSize, matrix->ySize-1);
-        while (botPtr < botEndPtr) {
-            double_ulld_punner_u.d = *botPtr;
+        mat_itr_t* itr = mat_itr_create_partial(matrix, 0, matrix->ySize-1, matrix->xSize, 1);
+        while (mat_itr_hasNext(itr)) {
+            double_ulld_punner_u.d = *mat_itr_next(itr);
             currentParity ^= double_ulld_punner_u.ll;
-            botPtr++;
         }
+        mat_itr_destroy(itr);
     }
-    double *midPtr = mat_data_ptr(matrix, 0, 1);
-    double *midEndPtr = mat_data_ptr(matrix, matrix->xSize, matrix->ySize-2);
-    while (midPtr < midEndPtr) {
-        double_ulld_punner_u.d = *midPtr;
+    mat_itr_t* itr = mat_itr_create_partial(matrix, 0, 1, matrix->xSize, matrix->ySize-2);
+    while (mat_itr_hasNext(itr)) {
+        double_ulld_punner_u.d = *mat_itr_next(itr);
         currentParity ^= double_ulld_punner_u.ll;
-        midPtr++;
     }
+    mat_itr_destroy(itr);
     unsigned long long int totalParity;
     MPI_Allreduce(&currentParity, &totalParity, 1,
                    MPI_UNSIGNED_LONG_LONG, MPI_BXOR,
@@ -176,47 +176,56 @@ unsigned long long int mat_crc64(mat_t *matrix) {
     int node, totalNodes;
     MPI_Comm_rank(MPI_COMM_WORLD, &node);
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
-
     if(node == 0){
-        double *topPtr = mat_data_ptr(matrix, 0, 0);
-        double *topEndPtr = mat_data_ptr(matrix, matrix->xSize, 0);
-        while (topPtr < topEndPtr) {
-            double_ulld_punner_u.d = *topPtr;
+        mat_itr_t* itr = mat_itr_create_partial(matrix, 0, 0, matrix->xSize, 1);
+        while (mat_itr_hasNext(itr)) {
+            double_ulld_punner_u.d = *mat_itr_next(itr);
             currentCRC += double_ulld_punner_u.ll;
-            topPtr++;
         }
+        mat_itr_destroy(itr);
     }
     if(node == totalNodes - 1) {
-        double *botPtr = mat_data_ptr(matrix, 0, matrix->ySize-1);
-        double *botEndPtr = mat_data_ptr(matrix, matrix->xSize, matrix->ySize-1);
-        while (botPtr < botEndPtr) {
-            double_ulld_punner_u.d = *botPtr;
+        mat_itr_t* itr = mat_itr_create_partial(matrix, 0, matrix->ySize-1, matrix->xSize, 1);
+        while (mat_itr_hasNext(itr)) {
+            double_ulld_punner_u.d = *mat_itr_next(itr);
             currentCRC += double_ulld_punner_u.ll;
-            botPtr++;
         }
+        mat_itr_destroy(itr);
     }
-    double *midPtr = mat_data_ptr(matrix, 0, 1);
-    double *midEndPtr = mat_data_ptr(matrix, matrix->xSize, matrix->ySize-2);
-    while (midPtr < midEndPtr) {
-        double_ulld_punner_u.d = *midPtr;
+    mat_itr_t* itr = mat_itr_create_partial(matrix, 0, 1, matrix->xSize, matrix->ySize-2);
+    while (mat_itr_hasNext(itr)) {
+        double_ulld_punner_u.d = *mat_itr_next(itr);
         currentCRC += double_ulld_punner_u.ll;
-        midPtr++;
     }
-    unsigned long long int totalCRC;
-    MPI_Allreduce(&currentCRC, &totalCRC, 1,
-                  MPI_UNSIGNED_LONG_LONG, MPI_BXOR,
-                  MPI_COMM_WORLD);
+    mat_itr_destroy(itr);
+    unsigned long long int totalCRC = 0;
+    MPI_Reduce(&currentCRC, &totalCRC, 1,
+                  MPI_UNSIGNED_LONG_LONG, MPI_SUM,
+                  0, MPI_COMM_WORLD);
     return totalCRC;
+}
+
+/* Calculates a 64 byte (C99) parity of the given matrix */
+unsigned long long int mat_parity_local(mat_t *matrix) {
+    unsigned long long int currentParity = 0ULL;
+    mat_itr_t* itr = mat_itr_create_partial(matrix, 0, 0, matrix->xSize, matrix->ySize);
+    while (mat_itr_hasNext(itr)) {
+        double_ulld_punner_u.d = *mat_itr_next(itr);
+        currentParity ^= double_ulld_punner_u.ll;
+    }
+    mat_itr_destroy(itr);
+    return currentParity;
 }
 
 /* Calculates a 64 byte crc of the given Matrix */
 unsigned long long int mat_crc64_local(mat_t *matrix) {
     unsigned long long int currentCRC = 0ULL;
-    double *endPtr = matrix->data + matrix->ySize * matrix->ySize;
-    for (double *tmpPtr = matrix->data; tmpPtr < endPtr; tmpPtr++) {
-        double_ulld_punner_u.d = *tmpPtr;
+    mat_itr_t* itr = mat_itr_create_partial(matrix, 0, 0, matrix->xSize, matrix->ySize);
+    while (mat_itr_hasNext(itr)) {
+        double_ulld_punner_u.d = *mat_itr_next(itr);
         currentCRC += double_ulld_punner_u.ll;
     }
+    mat_itr_destroy(itr);
     return currentCRC;
 }
 
@@ -233,7 +242,7 @@ void mat_copy_edge(mat_t *source, mat_t *target) {
 }
 
 /* Pretty prints the matrix to STDOUT */
-void mat_print(mat_t *matrix) {
+void mat_print_local(mat_t *matrix) {
     long size = matrix->xSize * matrix->ySize;
     double *ptr = matrix->data;
     for (long i = 1; i <= size; i++) {
@@ -249,8 +258,15 @@ void mat_print_mpi(mat_t *matrix) {
     int node, totalNodes;
     MPI_Comm_rank(MPI_COMM_WORLD, &node);
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
-    sleep((unsigned int) node + 1);
-    mat_print(matrix);
+    for(int i = 0; i < node; i++) {
+        MPI_Barrier(MPI_COMM_WORLD);
+    }
+    printf("SRT %d.\n", node);
+    mat_print_local(matrix);
+    printf("END %d.\n", node);
+    for(int i = node; i < (totalNodes-1); i++) {
+        MPI_Barrier(MPI_COMM_WORLD);
+    }
 }
 
 /* Compares the two matrices for equality */
