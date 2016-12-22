@@ -106,7 +106,6 @@ smoother_t *smoother_multiple_init(mat_t *source,
 
 /* Smooths the inside (exclude outer edge) of the given matrix until it changes < limit. */
 mat_t *mat_smooth(mat_t *source, mat_t *target, double limit, bool *overLimit) {
-    bool resultFlipped = false;
     long ctr = 0;
     mat_t *tmp;
     do {
@@ -118,14 +117,12 @@ mat_t *mat_smooth(mat_t *source, mat_t *target, double limit, bool *overLimit) {
         tmp = target;
         target = source;
         source = tmp;
-        resultFlipped = !resultFlipped;
-
         ctr++;
     } while (*overLimit);
 
     printf("%08li,", ctr);
 
-    return resultFlipped ? target : source;
+    return source;
 }
 
 /* Used for type punning between a double and a unsigned long long int */
@@ -163,10 +160,10 @@ unsigned long long int mat_parity(mat_t *matrix) {
         currentParity ^= double_ulld_punner_u.ll;
     }
     mat_itr_destroy(itr);
-    unsigned long long int totalParity;
-    MPI_Allreduce(&currentParity, &totalParity, 1,
+    unsigned long long int totalParity = 0;
+    MPI_Reduce(&currentParity, &totalParity, 1,
                    MPI_UNSIGNED_LONG_LONG, MPI_BXOR,
-                   MPI_COMM_WORLD);
+                   0, MPI_COMM_WORLD);
     return totalParity;
 }
 
