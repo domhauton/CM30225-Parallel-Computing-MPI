@@ -46,8 +46,8 @@ smoother_t *smoother_init(mat_itr_t *target,
     return matSmoother;
 }
 
-/* Clones a chain of smoother.
- *
+/*
+ * Clones a chain of smoother.
  */
 smoother_t *smoother_clone(smoother_t* smoother_old) {
     smoother_t *matSmoother = malloc(sizeof(smoother_t));
@@ -101,7 +101,7 @@ void smoother_run(smoother_t *matSmoother) {
 
 /* Removes a smoother_t.
         Undefined behaviour if smoother_t used after removal. */
-void smoother_destroy(smoother_t *matSmoother) {
+void smoother_destroy_inner(smoother_t *matSmoother) {
     mat_itr_destroy(matSmoother->srcMid);
     mat_itr_destroy(matSmoother->srcUp);
     mat_itr_destroy(matSmoother->srcDown);
@@ -113,11 +113,11 @@ void smoother_destroy(smoother_t *matSmoother) {
 
 /* Removes a smoother_t and all child jobs.
         Undefined behaviour if smoother_t used after removal. */
-void smoother_destroy_chain(smoother_t *smoother) {
+void smoother_destroy(smoother_t *smoother) {
     smoother_t *tmp = NULL;
     while(smoother != NULL) {
         tmp = smoother_next(smoother);
-        smoother_destroy(smoother);
+        smoother_destroy_inner(smoother);
         smoother = tmp;
     }
 }

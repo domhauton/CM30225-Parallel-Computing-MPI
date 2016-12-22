@@ -1,9 +1,10 @@
 //
-// Created by dominic on 08/12/16.
+// Created by dominic on 22/12/16.
 //
 
+#include <stdbool.h>
 #include <stdlib.h>
-#include "dispatcher.h"
+#include "../matrix/mat.h"
 
 typedef struct DISPATCHER_TASK_T {
     mat_t *srcMatrix;
@@ -17,14 +18,13 @@ typedef struct DISPATCHER_TASK_T {
 dispatcher_task_t *dispatcher_task_init(mat_t *srcMatrix,
                                         mat_t *tmpMatrix,
                                         double limit,
-                                        bool *overLimit,
-                                        unsigned int smthrSize) {
+                                        bool *overLimit) {
     dispatcher_task_t *dispatcher = malloc(sizeof(dispatcher_task_t));
     dispatcher->srcMatrix = srcMatrix;
     dispatcher->tmpMatrix = tmpMatrix;
     dispatcher->active = overLimit;
-    dispatcher->src2tmp = smoother_multiple_init(srcMatrix, tmpMatrix, limit, dispatcher->active, smthrSize);
-    dispatcher->tmp2src = smoother_multiple_init(tmpMatrix, srcMatrix, limit, dispatcher->active, smthrSize);
+    dispatcher->src2tmp = smoother_single_init(srcMatrix, tmpMatrix, limit, dispatcher->active);
+    dispatcher->tmp2src = smoother_single_init(tmpMatrix, srcMatrix, limit, dispatcher->active);
     dispatcher->loopCtr = 0;
     return dispatcher;
 }
@@ -54,15 +54,11 @@ void dispatcher_mpi_share(dispatcher_task_t *dispatcher_task) {
     *dispatcher_task->active = globallyOverLimit;
 }
 
-void dispatcher_task_run(dispatcher_task_t *dispatcher_task, spool_t *spool) {
+void dispatcher_task_run(dispatcher_task_t *dispatcher_task) {
     do {
         *dispatcher_task->active = false;
-        smoother_t* jobList = smoother_clone(dispatcher_task->loopCtr % 2 == 0 ? dispatcher_task->src2tmp : dispatcher_task->tmp2src);
-        // Submit Jobs
-        spool_job_sync_t *spoolJobSync = spool_job_add_batch(spool, jobList);
-        spool_job_sync_wait(spoolJobSync);
-        spool_job_sync_destroy(spoolJobSync);
-
+        smoother_t* job = smoother_clone(dispatcher_task->loopCtr % 2 == 0 ? dispatcher_task->src2tmp : dispatcher_task->tmp2src);
+        smoother_run(job);
         dispatcher_task->loopCtr++;
         dispatcher_mpi_share(dispatcher_task);
     } while (*dispatcher_task->active);
@@ -70,7 +66,7 @@ void dispatcher_task_run(dispatcher_task_t *dispatcher_task, spool_t *spool) {
 
 
 void dispatcher_task_destroy(dispatcher_task_t *dispatcher_task) {
-    smoother_destroy_chain(dispatcher_task->src2tmp);
-    smoother_destroy_chain(dispatcher_task->tmp2src);
+    smoother_destroy(dispatcher_task->src2tmp);
+    smoother_destroy(dispatcher_task->tmp2src);
     free(dispatcher_task);
 }

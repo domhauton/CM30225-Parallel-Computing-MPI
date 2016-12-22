@@ -7,7 +7,7 @@
 
 #include <mpi.h>
 #include "mat_itr.h"
-#include "smoother.h"
+#include "../smoothing/smoother.h"
 
 typedef struct MAT_T mat_t;
 

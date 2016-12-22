@@ -7,7 +7,7 @@
 #include <mpi.h>
 #include <zconf.h>
 #include "mat_itr.h"
-#include "smoother.h"
+#include "../smoothing/smoother.h"
 #include "../debug.h"
 #include "mat_factory.h"
 
@@ -112,7 +112,7 @@ mat_t *mat_smooth(mat_t *source, mat_t *target, double limit, bool *overLimit) {
         *overLimit = false;
         smoother_t *smoother = smoother_single_init(source, target, limit, overLimit);
         smoother_run(smoother);
-        smoother_destroy(smoother);
+        smoother_destroy_inner(smoother);
 
         tmp = target;
         target = source;

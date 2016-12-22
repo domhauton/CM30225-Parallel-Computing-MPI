@@ -133,7 +133,7 @@ void *spool_thread_run(void *voidArgs) {
         if (smoothJob != NULL) {
             if (smoothJob->matSmoother != NULL) {
                 smoother_run(smoothJob->matSmoother);
-                smoother_destroy(smoothJob->matSmoother);
+                smoother_destroy_inner(smoothJob->matSmoother);
             }
             spool_job_sync_complete(smoothJob->spoolJobSync);
             debug_print("Smoothing Pool\t- Thread %ld - Job Complete (Smoothing)\n", syscall(__NR_gettid));

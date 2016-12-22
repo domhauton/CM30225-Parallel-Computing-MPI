@@ -5,7 +5,7 @@
 #ifndef PARALLEL_COMPUTATION_CW1_MATSMOOTHER_H
 #define PARALLEL_COMPUTATION_CW1_MATSMOOTHER_H
 
-#include "mat_itr.h"
+#include "../matrix/mat_itr.h"
 
 typedef struct smoother_T smoother_t;
 
@@ -27,8 +27,6 @@ unsigned int smoother_child_jobs(smoother_t *matSmoother);
 
 void smoother_run(smoother_t *matSmoother);
 
-void smoother_destroy(smoother_t *matSmoother);
-
-void smoother_destroy_chain(smoother_t *smoother);
+void smoother_destroy(smoother_t *smoother);
 
 #endif //PARALLEL_COMPUTATION_CW1_MATSMOOTHER_H

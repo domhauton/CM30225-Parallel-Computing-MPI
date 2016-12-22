@@ -39,9 +39,7 @@ mat_t *mat_factory_init_seeded(int xSize, int ySize) {
     return matrix;
 }
 
-void calc_node_compute_size(int *count, int *displacement, int nodeCount, int computeHeight, int rowWidth) {
-    //printf("%d/%d=%d\n", computeHeight, nodeCount, computeHeight/nodeCount);
-    //printf("%dmod%d=%d\n", computeHeight, nodeCount, computeHeight%nodeCount);
+void calc_scatter_info(int *count, int *displacement, int nodeCount, int computeHeight, int rowWidth) {
     int minJobSize = computeHeight/nodeCount;
     int processesWithExtra = computeHeight%nodeCount;
     int currentDisplacement = 0;
@@ -60,11 +58,35 @@ mat_t *mat_scatter(mat_t *mat, int xSize, int ySize) {
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
     int displacement[totalNodes];
     int count[totalNodes];
-    calc_node_compute_size(count, displacement, totalNodes, ySize-2, xSize);
+    calc_scatter_info(count, displacement, totalNodes, ySize - 2, xSize);
     mat_t *localMat = mat_factory_init_empty(xSize, count[node]/xSize);
     MPI_Scatterv(
             mat_data_ptr(mat, 0, 0), count, displacement, MPI_DOUBLE,
             mat_data_ptr(localMat, 0, 0), count[node], MPI_DOUBLE,
             ROOT_RANK, MPI_COMM_WORLD);
     return localMat;
+}
+
+void calc_gather_info(int *count, int *displacement, int nodeCount, int computeHeight, int rowWidth) {
+    int minJobSize = computeHeight/nodeCount;
+    int processesWithExtra = computeHeight%nodeCount;
+    int currentDisplacement = rowWidth;
+    for(int i = 0; i < nodeCount; i++) {
+        int jobSize = (minJobSize + (i<processesWithExtra ? 1 : 0)) * rowWidth;
+        *displacement++ = currentDisplacement;
+        *count++ = jobSize;
+        currentDisplacement += jobSize;
+    }
+}
+
+void mat_gather(mat_t *full, mat_t *local, int xSize, int ySize) {
+    int node, totalNodes;
+    MPI_Comm_rank(MPI_COMM_WORLD, &node);
+    MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
+    int displacement[totalNodes];
+    int count[totalNodes];
+    calc_gather_info(count, displacement, totalNodes, ySize - 2, xSize);
+    MPI_Gatherv(mat_data_ptr(local, 0, 1), count[node], MPI_DOUBLE,
+            mat_data_ptr(full, 0, 0), count, displacement, MPI_DOUBLE,
+            0, MPI_COMM_WORLD);
 }
