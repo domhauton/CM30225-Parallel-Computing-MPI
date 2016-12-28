@@ -16,8 +16,6 @@ typedef struct smoother_T {
     //long ctr;
     double diffLimit;
     bool *overLimit;
-    smoother_t *nextJob;
-    unsigned int childJobs;
 } smoother_t;
 
 /* Allocates and assigns values to a smoother_t
@@ -30,8 +28,7 @@ smoother_t *smoother_init(mat_itr_t *target,
                             mat_itr_t *srcLeft,
                             mat_itr_t *srcRight,
                             bool *overLimit,
-                            double diffLimit,
-                            smoother_t *next) {
+                            double diffLimit) {
     smoother_t *matSmoother = malloc(sizeof(smoother_t));
     matSmoother->target = target;
     matSmoother->srcMid = srcCenter;
@@ -41,8 +38,6 @@ smoother_t *smoother_init(mat_itr_t *target,
     matSmoother->srcRight = srcRight;
     matSmoother->diffLimit = diffLimit;
     matSmoother->overLimit = overLimit;
-    matSmoother->nextJob = next;
-    matSmoother->childJobs = next == NULL ? 0 : next->childJobs + 1;
     return matSmoother;
 }
 
@@ -59,17 +54,7 @@ smoother_t *smoother_clone(smoother_t* smoother_old) {
     matSmoother->srcRight = mat_itr_clone(smoother_old->srcRight);
     matSmoother->diffLimit = smoother_old->diffLimit;
     matSmoother->overLimit = smoother_old->overLimit;
-    matSmoother->nextJob = smoother_old->nextJob == NULL ? NULL : smoother_clone(smoother_old->nextJob);
-    matSmoother->childJobs = smoother_old->childJobs;
     return matSmoother;
-}
-
-smoother_t *smoother_next(smoother_t *matSmoother){
-    return matSmoother->nextJob;
-}
-
-unsigned int smoother_child_jobs(smoother_t *matSmoother) {
-    return matSmoother->childJobs;
 }
 
 /* Averages all values bypassing diff calculations */
@@ -101,7 +86,7 @@ void smoother_run(smoother_t *matSmoother) {
 
 /* Removes a smoother_t.
         Undefined behaviour if smoother_t used after removal. */
-void smoother_destroy_inner(smoother_t *matSmoother) {
+void smoother_destroy(smoother_t *matSmoother) {
     mat_itr_destroy(matSmoother->srcMid);
     mat_itr_destroy(matSmoother->srcUp);
     mat_itr_destroy(matSmoother->srcDown);
@@ -109,15 +94,4 @@ void smoother_destroy_inner(smoother_t *matSmoother) {
     mat_itr_destroy(matSmoother->srcRight);
     mat_itr_destroy(matSmoother->target);
     free(matSmoother);
-}
-
-/* Removes a smoother_t and all child jobs.
-        Undefined behaviour if smoother_t used after removal. */
-void smoother_destroy(smoother_t *smoother) {
-    smoother_t *tmp = NULL;
-    while(smoother != NULL) {
-        tmp = smoother_next(smoother);
-        smoother_destroy_inner(smoother);
-        smoother = tmp;
-    }
 }

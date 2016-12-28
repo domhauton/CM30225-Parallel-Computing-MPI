@@ -5,10 +5,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <mpi.h>
-#include <zconf.h>
 #include "mat_itr.h"
 #include "../smoothing/smoother.h"
-#include "../debug.h"
 #include "mat_factory.h"
 
 typedef struct MAT_T {
@@ -53,55 +51,21 @@ mat_itr_edge_t *mat_itr_edge_create(mat_t *matrix) {
 smoother_t *smoother_create_partial(mat_t *source, mat_t *tmp,
                                       double limit, bool *overLimit,
                                       long x, long y,
-                                      long xSize, long ySize,
-                                      smoother_t *nextSmoother) {
+                                      long xSize, long ySize) {
     mat_itr_t *resItr = mat_itr_create_partial(tmp, x, y, xSize, ySize);
     mat_itr_t *ctrItr = mat_itr_create_partial(source, x, y, xSize, ySize);
     mat_itr_t *topItr = mat_itr_create_partial(source, x - 1, y, xSize, ySize);
     mat_itr_t *botItr = mat_itr_create_partial(source, x + 1, y, xSize, ySize);
     mat_itr_t *lftItr = mat_itr_create_partial(source, x, y - 1, xSize, ySize);
     mat_itr_t *rgtItr = mat_itr_create_partial(source, x, y + 1, xSize, ySize);
-    return smoother_init(resItr, ctrItr, topItr, botItr, lftItr, rgtItr, overLimit, limit, nextSmoother);
+    return smoother_init(resItr, ctrItr, topItr, botItr, lftItr, rgtItr, overLimit, limit);
 }
 
 /* Initialise a smoother for the inside of the matrix (excluding outer edge) */
 smoother_t *smoother_single_init(mat_t *source, mat_t *target, double limit, bool *overLimit) {
     long itrWidth = target->xSize - 2;
     long itrHeight = target->ySize - 2;
-    return smoother_create_partial(source, target, limit, overLimit, 1, 1, itrWidth, itrHeight, NULL);
-}
-
-/* Adds inner cut smooth jobs to head of give linked list */
-smoother_t *smoother_multiple_init(mat_t *source,
-                                     mat_t *tmp,
-                                     double limit,
-                                     bool *overLimit,
-                                     unsigned int smthrSize) {
-    long sections = (source->ySize - 2) / smthrSize;
-    long remainderSection = (source->ySize - 2) % smthrSize;
-    debug_print("Splitting %d matrix into %ld section/s of %d row/s with an extra %ld row section.\n",
-                source->ySize, sections, smthrSize, remainderSection);
-    long nextHeight = 1;
-    smoother_t *currentSmtr = NULL;
-    for (int i = 0; i < sections; i++) {
-        debug_print("Section - [%ld:%d]\n", nextHeight, smthrSize);
-        currentSmtr = smoother_create_partial(source, tmp,
-                                               limit, overLimit,
-                                               1, nextHeight,
-                                               source->xSize - 2, smthrSize,
-                                               currentSmtr);
-        nextHeight += smthrSize;
-    }
-    if (remainderSection != 0) {
-        debug_print("Section - [%ld:%ld]\n", nextHeight, remainderSection);
-        currentSmtr = smoother_create_partial(source, tmp,
-                                               limit, overLimit,
-                                               1, nextHeight,
-                                               source->xSize - 2, remainderSection,
-                                               currentSmtr);
-    }
-    debug_print("Splitting Complete.\n");
-    return currentSmtr;
+    return smoother_create_partial(source, target, limit, overLimit, 1, 1, itrWidth, itrHeight);
 }
 
 /* Smooths the inside (exclude outer edge) of the given matrix until it changes < limit. */
@@ -112,7 +76,7 @@ mat_t *mat_smooth(mat_t *source, mat_t *target, double limit, bool *overLimit) {
         *overLimit = false;
         smoother_t *smoother = smoother_single_init(source, target, limit, overLimit);
         smoother_run(smoother);
-        smoother_destroy_inner(smoother);
+        smoother_destroy(smoother);
 
         tmp = target;
         target = source;

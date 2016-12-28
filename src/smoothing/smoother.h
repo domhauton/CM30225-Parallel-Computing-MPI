@@ -16,14 +16,9 @@ smoother_t *smoother_init(mat_itr_t *target,
                             mat_itr_t *srcLeft,
                             mat_itr_t *srcRight,
                             bool *overLimit,
-                            double diffLimit,
-                            smoother_t *next);
+                            double diffLimit);
 
 smoother_t *smoother_clone(smoother_t* smoother_old);
-
-smoother_t *smoother_next(smoother_t *matSmoother);
-
-unsigned int smoother_child_jobs(smoother_t *matSmoother);
 
 void smoother_run(smoother_t *matSmoother);
 

@@ -6,24 +6,24 @@ import math
 directory = os.path.expanduser('~') + "/jobs"
 
 
-def get_time_estimate(size):
-    return (((size - 2) * (size - 2) * 3000) / 8000000) + 10
+def get_time_estimate(size, nodes):
+    return ((((size - 2) * (size - 2) * 3000) / 65E6) / (nodes*0.7))+2
 
 
-def get_job_executor(threads, precision, size, job_type, cuts):
-    return ["./parallel_computation_cw1 {:d} {:d} {:f} {:d} {:d}".format(threads, size, precision, job_type, cuts)]
+def get_job_executor(mpitasks, precision, size, job_type):
+    return ["mpirun -np {:d} bin/parallel_computation_cw2 {:d} {:f} {:d}".format(mpitasks, size, precision, job_type)]
 
 
-def gen_content(threads, job_uid):
+def gen_content(job_count, job_uid, nodes_required):
     return ["#!/bin/sh",
             "#SBATCH --account=cm30225",
             "#SBATCH --partition=teaching",
-            "#SBATCH --job-name={:03d}-{:02d}".format(job_uid, threads),
-            "#SBATCH --output=out/{:03d}-{:02d}-%j.out".format(job_uid, threads),
-            "#SBATCH --error=out/{:03d}-{:02d}-%j.err".format(job_uid, threads),
+            "#SBATCH --job-name=cw2-{:02d}-{:02d}".format(job_uid, job_count),
+            "#SBATCH --output=out/{:03d}-{:02d}-%j.out".format(job_uid, job_count),
+            "#SBATCH --error=out/{:03d}-{:02d}-%j.err".format(job_uid, job_count),
             "",
-            "#SBATCH --nodes=1",
-            "#SBATCH --ntasks-per-node=16".format(threads),
+            "#SBATCH --nodes={:d}".format(nodes_required),
+            "#SBATCH --ntasks-per-node=16",
             "",
             "#SBATCH --time=00:15:00",
             "",
@@ -34,14 +34,14 @@ def gen_content(threads, job_uid):
 
 
 def gen_file_name(uid, count):
-    return directory + "/cw1-{:03d}-{:02d}.slm".format(count, uid)
+    return directory + "/cw2-{:03d}-{:02d}.slm".format(count, uid)
 
 
-def write_to_file(jobs, job_uid):
-    filename = gen_file_name(job_uid, len(jobs))
+def write_to_file(job_list, job_uid, nodes_required):
+    filename = gen_file_name(job_uid, len(job_list))
     print("Writing to: " + filename)
     f = open(filename, 'w')
-    complete = gen_content(len(jobs), job_uid) + jobs
+    complete = gen_content(len(job_list), job_uid, nodes_required) + job_list
     f.write("\n".join(complete))
     f.close()
 
@@ -49,35 +49,31 @@ def write_to_file(jobs, job_uid):
 if not os.path.exists(directory):
     os.makedirs(directory)
 
-job_uid_ctr = 0
+currentPrecision = 0.0001
+currentSize = 2048
+nodesRequired = 4
 
 jobQueue = []
-jobQueueTime = 0
-jobQueueMaxTime = 6000
+jobQueue += get_job_executor(1, currentPrecision, currentSize, 0)
 
-currentPrecision = 0.0001
-currentCuts = 10
-currentSize = 2048
-jobType = 4
-currentThread = 1
+job_uid_ctr = 0
+jobQueueTime = get_time_estimate(currentSize, 1)
+jobQueueMaxTime = 60*15
 
-for jobType in range(1, 5):
-    for currentThread in [2 ** j for j in range(0, int(math.log2(multiprocessing.cpu_count())) + 1)]:
-        for currentSize in [2 ** j for j in range(5, 13)]:
-            job_uid_ctr += 1
-            jobExecutor = get_job_executor(currentThread, currentPrecision, currentSize, jobType, currentCuts)
-            timeEstimate = get_time_estimate(currentSize)
-            print(timeEstimate)
-            if timeEstimate > jobQueueMaxTime:
-                write_to_file(jobExecutor, job_uid_ctr)
-            elif timeEstimate + jobQueueTime > jobQueueMaxTime:
-                write_to_file(jobQueue, job_uid_ctr)
-                jobQueue = jobExecutor
-                jobQueueTime = timeEstimate
-            else:
-                jobQueue += jobExecutor
-                jobQueueTime += jobQueueTime
+for currentTasks in range(1, (16*nodesRequired)+1):
+    job_uid_ctr += 1
+    jobExecutor = get_job_executor(currentTasks, currentPrecision, currentSize, 1)
+    timeEstimate = get_time_estimate(currentSize, currentTasks)
+    if timeEstimate > jobQueueMaxTime:
+        write_to_file(jobExecutor, job_uid_ctr, nodesRequired)
+    elif timeEstimate + jobQueueTime > jobQueueMaxTime:
+        write_to_file(jobQueue, job_uid_ctr, nodesRequired)
+        jobQueue = jobExecutor
+        jobQueueTime = timeEstimate
+    else:
+        jobQueue += jobExecutor
+        jobQueueTime += jobQueueTime
 
 if len(jobQueue) > 0:
     job_uid_ctr += 1
-    write_to_file(jobQueue, job_uid_ctr)
+    write_to_file(jobQueue, job_uid_ctr, nodesRequired)
