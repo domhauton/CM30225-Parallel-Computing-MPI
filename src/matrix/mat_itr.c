@@ -61,6 +61,16 @@ bool mat_itr_hasNext(mat_itr_t *matIterator) {
     return matIterator != NULL && matIterator->currentPtr < matIterator->areaEnd;
 }
 
+bool mat_itr_swar_capable(mat_itr_t *matIterator) {
+    return matIterator->currentPtr+4 < matIterator->rowEnd;
+}
+
+double *mat_itr_next_swar(mat_itr_t *matIterator) {
+    double *ret = matIterator->currentPtr;
+    matIterator->currentPtr += 4;
+    return ret;
+}
+
 /* True if the iterator has more values */
 bool mat_itr_edge_hasNext(mat_itr_edge_t *edgeIterator) {
     return edgeIterator->currentPtr < edgeIterator->endFinalRow;

@@ -11,7 +11,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 
-set(CMAKE_C_FLAGS "-std=gnu99 -march=native -O2 -pthread -Wall ${CMAKE_C_FLAGS} ${MPI_COMPILE_FLAGS}")
+set(CMAKE_C_FLAGS "-std=gnu99 -mavx -march=native -O3 -pthread -Wall ${CMAKE_C_FLAGS} ${MPI_COMPILE_FLAGS}")
 
 set(SOURCE_FILES src/main.c src/matrix/mat.h src/matrix/mat.c src/matrix/mat_itr.c src/matrix/mat_itr.h src/smoothing/smoother.c src/smoothing/smoother.h src/matrix/mat_factory.c src/matrix/mat_factory.h src/benchmarking/bmark.h src/benchmarking/bmark.c src/smoothing/dispatcher.c src/smoothing/dispatcher.h)
 

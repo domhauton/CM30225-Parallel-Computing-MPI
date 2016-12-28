@@ -19,6 +19,10 @@ double *mat_itr_next(mat_itr_t *matIterator);
 
 bool mat_itr_hasNext(mat_itr_t *matIterator);
 
+bool mat_itr_swar_capable(mat_itr_t *matIterator);
+
+double *mat_itr_next_swar(mat_itr_t *matIterator);
+
 void mat_itr_destroy(mat_itr_t *matIterator);
 
 mat_itr_edge_t *mat_itr_edge_init(double *data, long width, long height);

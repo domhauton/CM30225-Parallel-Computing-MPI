@@ -13,25 +13,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="97724a76-4df9-4c3c-a8b0-23a65c1590ec" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/spool/spool.c" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/spool/spool.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/spool/spool_dispatcher.c" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/spool/spool_dispatcher.h" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/deployment.xml" afterPath="$PROJECT_DIR$/.idea/deployment.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/webServers.xml" afterPath="$PROJECT_DIR$/.idea/webServers.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/cw-prepare.sh" afterPath="$PROJECT_DIR$/bin/cw-prepare.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/cw-run.sh" afterPath="$PROJECT_DIR$/bin/cw-run.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/slurm_job_gen.py" afterPath="$PROJECT_DIR$/bin/slurm_job_gen.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/benchmarking/bmark.c" afterPath="$PROJECT_DIR$/src/benchmarking/bmark.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/benchmarking/bmark.h" afterPath="$PROJECT_DIR$/src/benchmarking/bmark.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.c" afterPath="$PROJECT_DIR$/src/main.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/matrix/mat.c" afterPath="$PROJECT_DIR$/src/matrix/mat.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/matrix/mat.h" afterPath="$PROJECT_DIR$/src/matrix/mat.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/smoothing/dispatcher.c" afterPath="$PROJECT_DIR$/src/smoothing/dispatcher.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/matrix/mat_itr.c" afterPath="$PROJECT_DIR$/src/matrix/mat_itr.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/matrix/mat_itr.h" afterPath="$PROJECT_DIR$/src/matrix/mat_itr.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/smoothing/smoother.c" afterPath="$PROJECT_DIR$/src/smoothing/smoother.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/smoothing/smoother.h" afterPath="$PROJECT_DIR$/src/smoothing/smoother.h" />
     </list>
     <ignored path="parallel_computation_cw1.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -50,7 +36,7 @@
     <favorites_list name="parallel_computation_cw1" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.4905014">
+    <splitter split-orientation="horizontal" split-proportion="0.21836926">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="600">
           <file leaf-file-name="main.c" pinned="false" current-in-tab="false">
@@ -65,12 +51,19 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="mat_factory.c" pinned="false" current-in-tab="true">
+          <file leaf-file-name="mat_factory.c" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/matrix/mat_factory.c">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2592">
-                  <caret line="81" column="5" lean-forward="false" selection-start-line="81" selection-start-column="5" selection-end-line="81" selection-end-column="5" />
-                  <folding />
+                <state relative-caret-position="1044">
+                  <caret line="41" column="17" lean-forward="false" selection-start-line="41" selection-start-column="17" selection-end-line="41" selection-end-column="17" />
+                  <folding>
+                    <marker date="1482430080056" expanded="true" signature="272:612" ph="{...}" />
+                    <marker date="1482430080056" expanded="true" signature="720:1049" ph="{...}" />
+                    <marker date="1482430080056" expanded="true" signature="1153:1548" ph="{...}" />
+                    <marker date="1482430080056" expanded="true" signature="1656:2198" ph="{...}" />
+                    <marker date="1482430080056" expanded="true" signature="2301:2686" ph="{...}" />
+                    <marker date="1482430080056" expanded="true" signature="2753:3177" ph="{...}" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -109,11 +102,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
+          <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="324">
-                  <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
+                <state relative-caret-position="684">
+                  <caret line="19" column="7" lean-forward="false" selection-start-line="19" selection-start-column="7" selection-end-line="19" selection-end-column="7" />
                   <folding />
                 </state>
               </provider>
@@ -155,11 +148,21 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="600">
-          <file leaf-file-name="mat_itr.h" pinned="false" current-in-tab="true">
+          <file leaf-file-name="mat_itr.h" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/matrix/mat_itr.h">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="756">
-                  <caret line="21" column="45" lean-forward="false" selection-start-line="21" selection-start-column="45" selection-end-line="21" selection-end-column="45" />
+                  <caret line="21" column="50" lean-forward="false" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="mat.c" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/matrix/mat.c">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="468">
+                  <caret line="18" column="25" lean-forward="false" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="25" />
                   <folding />
                 </state>
               </provider>
@@ -168,8 +171,8 @@
           <file leaf-file-name="mat_itr.c" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/matrix/mat_itr.c">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="3024">
-                  <caret line="84" column="35" lean-forward="false" selection-start-line="84" selection-start-column="35" selection-end-line="84" selection-end-column="35" />
+                <state relative-caret-position="396">
+                  <caret line="67" column="8" lean-forward="false" selection-start-line="67" selection-start-column="8" selection-end-line="67" selection-end-column="8" />
                   <folding />
                 </state>
               </provider>
@@ -185,12 +188,14 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="smoother.c" pinned="false" current-in-tab="false">
+          <file leaf-file-name="smoother.c" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/smoothing/smoother.c">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="684">
-                  <caret line="23" column="22" lean-forward="false" selection-start-line="23" selection-start-column="22" selection-end-line="23" selection-end-column="22" />
-                  <folding />
+                <state relative-caret-position="-51">
+                  <caret line="97" column="0" lean-forward="true" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#42#61#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -244,6 +249,7 @@
       <find>src/messaging/msg_mngr.c</find>
       <find>spool_</find>
       <find>spool</find>
+      <find>mallo</find>
     </findStrings>
     <replaceStrings>
       <replace>spool_dispatcher_</replace>
@@ -283,7 +289,6 @@
         <option value="$PROJECT_DIR$/bin/cw-status.sh" />
         <option value="$PROJECT_DIR$/src/messaging/msg_mngr.h" />
         <option value="$PROJECT_DIR$/src/spool/spool_dispatch.h" />
-        <option value="$PROJECT_DIR$/src/matrix/mat_itr.c" />
         <option value="$PROJECT_DIR$/src/spool/spool.h" />
         <option value="$PROJECT_DIR$/src/matrix/mat_smthr.c" />
         <option value="$PROJECT_DIR$/src/matrix/mat_smthr.h" />
@@ -293,7 +298,6 @@
         <option value="$PROJECT_DIR$/src/spool/dispatcher.h" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/spool/dispatcher.c" />
-        <option value="$PROJECT_DIR$/src/matrix/mat_factory.c" />
         <option value="$PROJECT_DIR$/src/matrix/mat_factory.h" />
         <option value="$PROJECT_DIR$/src/matrix/bmark.c" />
         <option value="$PROJECT_DIR$/src/smoothing/dispatcher.h" />
@@ -304,14 +308,16 @@
         <option value="$PROJECT_DIR$/src/benchmarking/bmark.h" />
         <option value="$PROJECT_DIR$/src/benchmarking/bmark.c" />
         <option value="$PROJECT_DIR$/src/smoothing/dispatcher.c" />
-        <option value="$PROJECT_DIR$/src/smoothing/smoother.c" />
         <option value="$PROJECT_DIR$/src/smoothing/smoother.h" />
         <option value="$PROJECT_DIR$/src/matrix/mat.c" />
-        <option value="$PROJECT_DIR$/src/matrix/mat_itr.h" />
         <option value="$PROJECT_DIR$/src/matrix/mat.h" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/src/main.c" />
         <option value="$PROJECT_DIR$/bin/slurm_job_gen.py" />
+        <option value="$PROJECT_DIR$/src/matrix/mat_factory.c" />
+        <option value="$PROJECT_DIR$/src/matrix/mat_itr.h" />
+        <option value="$PROJECT_DIR$/src/matrix/mat_itr.c" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/smoothing/smoother.c" />
       </list>
     </option>
   </component>
@@ -764,7 +770,7 @@
       <workItem from="1482708154538" duration="12000" />
       <workItem from="1482708178656" duration="3014000" />
       <workItem from="1482768963178" duration="18877000" />
-      <workItem from="1482885386511" duration="1296000" />
+      <workItem from="1482885386511" duration="12979000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1478398751426</created>
@@ -871,11 +877,18 @@
       <option name="project" value="LOCAL" />
       <updated>1482365816255</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Final">
+      <created>1482886961634</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1482886961634</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="373440000" />
+    <option name="totallyTimeSpent" value="385123000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -888,29 +901,29 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="3840" y="-16" width="3840" height="2146" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14730954" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936302" sideWeight="0.49893162" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3285273" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="LuaJ" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936302" sideWeight="0.50106835" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32904223" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31326586" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31822863" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3377961" sideWeight="0.49582464" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3285273" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936302" sideWeight="0.50106835" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32904223" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32904223" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31874356" sideWeight="0.49582464" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31822863" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14730954" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="LuaJ" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31326586" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3861998" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32904223" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31874356" sideWeight="0.49582464" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32955715" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32904223" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3861998" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -961,7 +974,8 @@
     <MESSAGE value="Working MPI Implementation" />
     <MESSAGE value="Added scatter" />
     <MESSAGE value="Fixed Parity Calculation Error" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed Parity Calculation Error" />
+    <MESSAGE value="Final" />
+    <option name="LAST_COMMIT_MESSAGE" value="Final" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -970,13 +984,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/matrix/mat_itr.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main.c___jb_tmp___" />
     <entry file="file://$PROJECT_DIR$/src/worker/smoothTask.h" />
     <entry file="file://$PROJECT_DIR$/src/worker/smoothTask.c" />
@@ -1066,6 +1073,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="900">
           <caret line="25" column="65" lean-forward="false" selection-start-line="25" selection-start-column="65" selection-end-line="25" selection-end-column="65" />
+          <folding>
+            <element signature="e#42#62#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1113,14 +1123,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/matrix/mat_itr.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3024">
-          <caret line="84" column="35" lean-forward="false" selection-start-line="84" selection-start-column="35" selection-end-line="84" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/matrix/mat.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1260">
@@ -1157,14 +1159,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
@@ -1185,14 +1179,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/matrix/mat_factory.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2592">
-          <caret line="81" column="5" lean-forward="false" selection-start-line="81" selection-start-column="5" selection-end-line="81" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/benchmarking/bmark.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1828">
@@ -1203,20 +1189,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/smoothing/smoother.c">
+    <entry file="file://$PROJECT_DIR$/src/matrix/mat_factory.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="684">
-          <caret line="23" column="22" lean-forward="false" selection-start-line="23" selection-start-column="22" selection-end-line="23" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/matrix/mat.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="59" column="79" lean-forward="true" selection-start-line="59" selection-start-column="79" selection-end-line="59" selection-end-column="79" />
+        <state relative-caret-position="1044">
+          <caret line="41" column="17" lean-forward="false" selection-start-line="41" selection-start-column="17" selection-end-line="41" selection-end-column="17" />
           <folding>
-            <element signature="e#42#61#0" expanded="true" />
+            <marker date="1482430080056" expanded="true" signature="272:612" ph="{...}" />
+            <marker date="1482430080056" expanded="true" signature="720:1049" ph="{...}" />
+            <marker date="1482430080056" expanded="true" signature="1153:1548" ph="{...}" />
+            <marker date="1482430080056" expanded="true" signature="1656:2198" ph="{...}" />
+            <marker date="1482430080056" expanded="true" signature="2301:2686" ph="{...}" />
+            <marker date="1482430080056" expanded="true" signature="2753:3177" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1224,7 +1207,49 @@
     <entry file="file://$PROJECT_DIR$/src/matrix/mat_itr.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="756">
-          <caret line="21" column="45" lean-forward="false" selection-start-line="21" selection-start-column="45" selection-end-line="21" selection-end-column="45" />
+          <caret line="21" column="50" lean-forward="false" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/matrix/mat_itr.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="67" column="8" lean-forward="false" selection-start-line="67" selection-start-column="8" selection-end-line="67" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/matrix/mat.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="18" column="25" lean-forward="false" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/lib/gcc/x86_64-linux-gnu/5/include/avxintrin.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1075">
+          <caret line="95" column="8" lean-forward="false" selection-start-line="95" selection-start-column="8" selection-end-line="95" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/smoothing/smoother.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-51">
+          <caret line="97" column="0" lean-forward="true" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
+          <folding>
+            <element signature="e#42#61#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="684">
+          <caret line="19" column="7" lean-forward="false" selection-start-line="19" selection-start-column="7" selection-end-line="19" selection-end-column="7" />
           <folding />
         </state>
       </provider>
