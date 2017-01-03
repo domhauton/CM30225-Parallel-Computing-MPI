@@ -1,7 +1,4 @@
-import multiprocessing
 import os
-
-import math
 
 directory = os.path.expanduser('~') + "/jobs"
 
@@ -50,7 +47,7 @@ if not os.path.exists(directory):
     os.makedirs(directory)
 
 currentPrecision = 0.0001
-currentSize = 2048
+currentSize = 4096
 nodesRequired = 4
 
 jobQueue = []

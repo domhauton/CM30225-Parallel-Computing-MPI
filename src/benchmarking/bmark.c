@@ -11,6 +11,9 @@
 #include "bmark.h"
 #include "../smoothing/dispatcher.h"
 
+/*
+ * Smooth a seeded matrix serially, and print results.
+ */
 double bmark_serial(int size, double precision) {
     struct timeval tv_start, tv_end;
 
@@ -33,6 +36,9 @@ double bmark_serial(int size, double precision) {
     return time_spent;
 }
 
+/*
+ * Smooth a seeded matrix in parallel using MPI, and print results.
+ */
 double bmark_mpi(int size, double precision) {
     struct timeval tv_start, tv_end;
     int node, totalNodes;
