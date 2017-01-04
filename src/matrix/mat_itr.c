@@ -46,6 +46,7 @@ mat_itr_t *mat_itr_init(double *dataPtr, long fullWidth, long areaWidth, long ar
     return matIterator;
 }
 
+/* Creates a clone of the given iterator. Everything is copied. Can be done at any point. */
 mat_itr_t *mat_itr_clone(mat_itr_t* mat_itr_old) {
     mat_itr_t *matIterator = malloc(sizeof(mat_itr_t));
     matIterator->currentPtr = mat_itr_old->currentPtr;
@@ -61,10 +62,12 @@ bool mat_itr_hasNext(mat_itr_t *matIterator) {
     return matIterator != NULL && matIterator->currentPtr < matIterator->areaEnd;
 }
 
+/* Checks if the next four values in the iterator are physically next to each other in memory */
 bool mat_itr_swar_capable(mat_itr_t *matIterator) {
     return matIterator->currentPtr+4 < matIterator->rowEnd;
 }
 
+/* Pushes the iterator four values across in memory. Should only be done after a SWAR computation */
 double *mat_itr_next_swar(mat_itr_t *matIterator) {
     double *ret = matIterator->currentPtr;
     matIterator->currentPtr += 4;
@@ -103,22 +106,22 @@ mat_itr_edge_t *mat_itr_edge_init(double *data, long width, long height) {
     return edgeIterator;
 }
 
-/* Advances the iterator to a unseen value on the edge and returns the value */
+/* Advances the edge iterator to a unseen value on the edge and returns the value */
 double *mat_itr_edge_next(mat_itr_edge_t *edgeIterator) {
-    if (edgeIterator->currentPtr <= edgeIterator->endFirstRow) {
+    if (edgeIterator->currentPtr <= edgeIterator->endFirstRow) { // The cursor is filling out the top row.
         return ++edgeIterator->currentPtr;
-    } else if (edgeIterator->currentPtr < edgeIterator->startFinalRow) {
-        if (edgeIterator->isAtRowStart) {
+    } else if (edgeIterator->currentPtr < edgeIterator->startFinalRow) { // The cursor is travelling along the sides.
+        if (edgeIterator->isAtRowStart) { // Left column
             edgeIterator->isAtRowStart = false;
             edgeIterator->currentPtr += edgeIterator->rowJumpSize;
             return edgeIterator->currentPtr;
-        } else {
+        } else { // Right Column
             edgeIterator->isAtRowStart = true;
             return ++edgeIterator->currentPtr;
         }
-    } else if (edgeIterator->currentPtr < edgeIterator->endFinalRow) {
+    } else if (edgeIterator->currentPtr < edgeIterator->endFinalRow) { // Cursor is filling out the last row.
         return ++edgeIterator->currentPtr;
-    } else {
+    } else { // A default return. Shouldn't happen.
         return NULL;
     }
 }

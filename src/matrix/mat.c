@@ -52,6 +52,7 @@ smoother_t *smoother_create_partial(mat_t *source, mat_t *tmp,
                                       double limit, bool *overLimit,
                                       long x, long y,
                                       long xSize, long ySize) {
+    // Get all the pointers required and convert them to iterators for easy management.
     mat_itr_t *resItr = mat_itr_create_partial(tmp, x, y, xSize, ySize);
     mat_itr_t *ctrItr = mat_itr_create_partial(source, x, y, xSize, ySize);
     mat_itr_t *topItr = mat_itr_create_partial(source, x - 1, y, xSize, ySize);
@@ -95,14 +96,15 @@ union {
     unsigned long long int ll; // C99 long long >= 64 bytes
 } double_ulld_punner_u;
 
-/* Calculates a 64 byte (C99) parity of the given matrix */
-unsigned long long int mat_parity(mat_t *matrix) {
+/* Calculates a 64 byte (C99) parity of the given matrix section across all processes.
+   Must be called on all nodes. */
+unsigned long long int mat_mpi_parity(mat_t *matrix) {
     unsigned long long int currentParity = 0ULL;
     int node, totalNodes;
     MPI_Comm_rank(MPI_COMM_WORLD, &node);
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
 
-    if(node == 0){
+    if(node == 0){ // Only calculate top row if first rank
         mat_itr_t* itr = mat_itr_create_partial(matrix, 0, 0, matrix->xSize, 1);
         while (mat_itr_hasNext(itr)) {
             double_ulld_punner_u.d = *mat_itr_next(itr);
@@ -110,7 +112,8 @@ unsigned long long int mat_parity(mat_t *matrix) {
         }
         mat_itr_destroy(itr);
     }
-    if(node == totalNodes - 1) {
+    // Could be first and last rank
+    if(node == totalNodes - 1) { // Only calculate bottom row if last rank
         mat_itr_t* itr = mat_itr_create_partial(matrix, 0, matrix->ySize-1, matrix->xSize, 1);
         while (mat_itr_hasNext(itr)) {
             double_ulld_punner_u.d = *mat_itr_next(itr);
@@ -118,6 +121,7 @@ unsigned long long int mat_parity(mat_t *matrix) {
         }
         mat_itr_destroy(itr);
     }
+    // Calculate middle section
     mat_itr_t* itr = mat_itr_create_partial(matrix, 0, 1, matrix->xSize, matrix->ySize-2);
     while (mat_itr_hasNext(itr)) {
         double_ulld_punner_u.d = *mat_itr_next(itr);
@@ -131,13 +135,15 @@ unsigned long long int mat_parity(mat_t *matrix) {
     return totalParity;
 }
 
-/* Calculates a 64 byte (C99) parity of the given matrix */
-unsigned long long int mat_crc64(mat_t *matrix) {
+/* Calculates a 64 byte (C99) parity of the given matrix section across all processes.
+   Must be called on all nodes. */
+unsigned long long int mat_mpi_crc64(mat_t *matrix) {
     unsigned long long int currentCRC = 0ULL;
     int node, totalNodes;
     MPI_Comm_rank(MPI_COMM_WORLD, &node);
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
-    if(node == 0){
+
+    if(node == 0){ // Only calculate top row if first rank
         mat_itr_t* itr = mat_itr_create_partial(matrix, 0, 0, matrix->xSize, 1);
         while (mat_itr_hasNext(itr)) {
             double_ulld_punner_u.d = *mat_itr_next(itr);
@@ -145,7 +151,8 @@ unsigned long long int mat_crc64(mat_t *matrix) {
         }
         mat_itr_destroy(itr);
     }
-    if(node == totalNodes - 1) {
+    // Could be first and last rank
+    if(node == totalNodes - 1) { // Only calculate bottom row if last rank
         mat_itr_t* itr = mat_itr_create_partial(matrix, 0, matrix->ySize-1, matrix->xSize, 1);
         while (mat_itr_hasNext(itr)) {
             double_ulld_punner_u.d = *mat_itr_next(itr);
@@ -153,6 +160,7 @@ unsigned long long int mat_crc64(mat_t *matrix) {
         }
         mat_itr_destroy(itr);
     }
+    // Calculate middle section
     mat_itr_t* itr = mat_itr_create_partial(matrix, 0, 1, matrix->xSize, matrix->ySize-2);
     while (mat_itr_hasNext(itr)) {
         double_ulld_punner_u.d = *mat_itr_next(itr);
@@ -215,16 +223,21 @@ void mat_print_local(mat_t *matrix) {
     }
 }
 
-void mat_print_mpi(mat_t *matrix) {
+/* Pretty prints the matrix one node at a time in the correct sequence */
+void mat_mpi_print(mat_t *matrix) {
     int node, totalNodes;
     MPI_Comm_rank(MPI_COMM_WORLD, &node);
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
+
+    // Block barrier until node's turn
     for(int i = 0; i < node; i++) {
         MPI_Barrier(MPI_COMM_WORLD);
     }
     printf("SRT %d.\n", node);
     mat_print_local(matrix);
     printf("END %d.\n", node);
+
+    // Trigger the barrier for other nodes too
     for(int i = node; i < (totalNodes-1); i++) {
         MPI_Barrier(MPI_COMM_WORLD);
     }
@@ -247,7 +260,9 @@ bool mat_equals(mat_t *matrix1, mat_t *matrix2) {
     }
 }
 
-int mat_shareRows(mat_t* mat, MPI_Request* mpi_request) {
+/* Sends the top row to the rank above and bottom row to the rank below if they exist
+   Returns the amount of requests required for sending */
+int mat_mpi_shareRows(mat_t *mat, MPI_Request *mpi_request) {
     int node, totalNodes;
     MPI_Comm_rank(MPI_COMM_WORLD, &node);
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
@@ -265,7 +280,9 @@ int mat_shareRows(mat_t* mat, MPI_Request* mpi_request) {
     return retInt;
 }
 
-int mat_acceptEdgeRows(mat_t* mat, MPI_Request* mpi_request) {
+/* Accepts the top row to the rank above and bottom row to the rank below if they exist
+   Returns the amount of requests required for receipt*/
+int mat_mpi_acceptEdgeRows(mat_t *mat, MPI_Request *mpi_request) {
     int node, totalNodes;
     MPI_Comm_rank(MPI_COMM_WORLD, &node);
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
@@ -283,6 +300,7 @@ int mat_acceptEdgeRows(mat_t* mat, MPI_Request* mpi_request) {
     return retInt;
 }
 
+/* Returns a new matrix that has copied all the values on the outer edge of the given matrix */
 mat_t *mat_init_clone_edge(mat_t *matrix) {
     mat_t* clone = mat_factory_init_empty(matrix->xSize, matrix->ySize);
     mat_copy_edge(matrix, clone);

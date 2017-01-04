@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     MPI_Comm_size(MPI_COMM_WORLD, &totalNodes);
     debug_print("Node %d of %d - #%d\n", node + 1, totalNodes, node);
 
-    if (argc == 4) {
+    if (argc == 4) { // If correct arg count run requested computation
         int size = atoi(argv[1]);
         double precision = strtof(argv[2], NULL);
         int type = atoi(argv[3]);

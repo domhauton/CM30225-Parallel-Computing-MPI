@@ -39,19 +39,25 @@ mat_t *mat_factory_init_seeded(int xSize, int ySize) {
     return matrix;
 }
 
+/* Calculates the required displacement and size of each block for a scatter */
 void calc_scatter_info(int *count, int *displacement, int nodeCount, int computeHeight, int rowWidth) {
     int minJobSize = computeHeight/nodeCount;
     int processesWithExtra = computeHeight%nodeCount;
+    // Start at zero displacement to include the first row.
     int currentDisplacement = 0;
     for(int i = 0; i < nodeCount; i++) {
+        // Some jobs have extra rows because it couldn't be evenly divided
         int jobSize = (minJobSize + (i<processesWithExtra ? 1 : 0)) * rowWidth;
         *displacement++ = currentDisplacement;
+        // Two extra rows at the top and bottom required
         *count++ = jobSize + (2 * rowWidth);
         currentDisplacement += jobSize;
     }
 }
 
-/* Creates a new matrix with seeded random values */
+/* Scatters the given matrix across all of the nodes as evenly as possible for computation
+   Creates a new matrix with the area this node was assigned.
+   Can be called with a null matrix. */
 mat_t *mat_scatter(mat_t *mat, int xSize, int ySize) {
     int node, totalNodes;
     MPI_Comm_rank(MPI_COMM_WORLD, &node);
@@ -59,6 +65,7 @@ mat_t *mat_scatter(mat_t *mat, int xSize, int ySize) {
     int displacement[totalNodes];
     int count[totalNodes];
     calc_scatter_info(count, displacement, totalNodes, ySize - 2, xSize);
+    // Create a local matrix that the scatterv will push data into.
     mat_t *localMat = mat_factory_init_empty(xSize, count[node]/xSize);
     MPI_Scatterv(
             mat_data_ptr(mat, 0, 0), count, displacement, MPI_DOUBLE,
@@ -67,11 +74,14 @@ mat_t *mat_scatter(mat_t *mat, int xSize, int ySize) {
     return localMat;
 }
 
+/* Calculates the required displacement and size of each block for a gather */
 void calc_gather_info(int *count, int *displacement, int nodeCount, int computeHeight, int rowWidth) {
     int minJobSize = computeHeight/nodeCount;
     int processesWithExtra = computeHeight%nodeCount;
+    // Start on the second row. The first row would not have changed.
     int currentDisplacement = rowWidth;
     for(int i = 0; i < nodeCount; i++) {
+        // Some nodes had more to calculate.
         int jobSize = (minJobSize + (i<processesWithExtra ? 1 : 0)) * rowWidth;
         *displacement++ = currentDisplacement;
         *count++ = jobSize;
@@ -79,6 +89,9 @@ void calc_gather_info(int *count, int *displacement, int nodeCount, int computeH
     }
 }
 
+/* Scatters the given matrix across all of the nodes as evenly as possible for computation
+   Can be called with a null full matrix.
+   xSize and ySize is that of the full matrix */
 void mat_gather(mat_t *full, mat_t *local, int xSize, int ySize) {
     int node, totalNodes;
     MPI_Comm_rank(MPI_COMM_WORLD, &node);

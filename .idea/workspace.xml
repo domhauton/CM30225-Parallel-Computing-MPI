@@ -13,10 +13,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="97724a76-4df9-4c3c-a8b0-23a65c1590ec" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/report/images/sizes-kartflatt.png" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/Report.pdf" afterPath="$PROJECT_DIR$/report/Report.pdf" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/slurm_job_gen.py" afterPath="$PROJECT_DIR$/bin/slurm_job_gen.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/Report.aux" afterPath="$PROJECT_DIR$/report/Report.aux" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/Report.log" afterPath="$PROJECT_DIR$/report/Report.log" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/Report.tex" afterPath="$PROJECT_DIR$/report/Report.tex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/Report.tex.backup" afterPath="$PROJECT_DIR$/report/Report.tex.backup" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/benchmarking/bmark.c" afterPath="$PROJECT_DIR$/src/benchmarking/bmark.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.c" afterPath="$PROJECT_DIR$/src/main.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/matrix/mat.c" afterPath="$PROJECT_DIR$/src/matrix/mat.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/matrix/mat.h" afterPath="$PROJECT_DIR$/src/matrix/mat.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/matrix/mat_factory.c" afterPath="$PROJECT_DIR$/src/matrix/mat_factory.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/matrix/mat_itr.c" afterPath="$PROJECT_DIR$/src/matrix/mat_itr.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/smoothing/dispatcher.c" afterPath="$PROJECT_DIR$/src/smoothing/dispatcher.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/smoothing/smoother.c" afterPath="$PROJECT_DIR$/src/smoothing/smoother.c" />
     </list>
     <ignored path="parallel_computation_cw1.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -35,196 +46,114 @@
     <favorites_list name="parallel_computation_cw1" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.4607646">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="600">
-          <file leaf-file-name="main.c" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="684">
-                  <caret line="19" column="21" lean-forward="false" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
-                  <folding>
-                    <element signature="e#0#18#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="mat_factory.c" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/matrix/mat_factory.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2124">
-                  <caret line="62" column="16" lean-forward="true" selection-start-line="62" selection-start-column="4" selection-end-line="62" selection-end-column="17" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="slurm_job_gen.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/bin/slurm_job_gen.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="45">
-                  <caret line="49" column="18" lean-forward="false" selection-start-line="49" selection-start-column="18" selection-end-line="49" selection-end-column="18" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="cw-run.sh" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/bin/cw-run.sh">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="108">
-                  <caret line="3" column="33" lean-forward="false" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="33" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="dispatcher.c" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/smoothing/dispatcher.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="396">
-                  <caret line="47" column="18" lean-forward="false" selection-start-line="47" selection-start-column="4" selection-end-line="47" selection-end-column="18" />
-                  <folding>
-                    <element signature="e#42#62#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="684">
-                  <caret line="19" column="7" lean-forward="false" selection-start-line="19" selection-start-column="7" selection-end-line="19" selection-end-column="7" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="cw-prepare.sh" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/bin/cw-prepare.sh">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="396">
-                  <caret line="11" column="20" lean-forward="false" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="27" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="cw-status.sh" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/bin/cw-status.sh">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="36">
-                  <caret line="1" column="378" lean-forward="false" selection-start-line="1" selection-start-column="378" selection-end-line="1" selection-end-column="378" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="mat.h" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/matrix/mat.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1260">
-                  <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#147#163#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="600">
-          <file leaf-file-name="mat_itr.h" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/matrix/mat_itr.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="756">
-                  <caret line="21" column="50" lean-forward="false" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="mat.c" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/matrix/mat.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="648">
-                  <caret line="18" column="25" lean-forward="false" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="25" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="mat_itr.c" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/matrix/mat_itr.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2412">
-                  <caret line="67" column="8" lean-forward="false" selection-start-line="67" selection-start-column="8" selection-end-line="67" selection-end-column="8" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="smoother.h" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/smoothing/smoother.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="720">
-                  <caret line="20" column="53" lean-forward="false" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="smoother.c" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/smoothing/smoother.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="540">
-                  <caret line="72" column="19" lean-forward="true" selection-start-line="72" selection-start-column="19" selection-end-line="72" selection-end-column="19" />
-                  <folding>
-                    <element signature="e#42#61#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="bmark.h" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/benchmarking/bmark.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="360">
-                  <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="bmark.c" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/benchmarking/bmark.c">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="369">
-                  <caret line="39" column="47" lean-forward="false" selection-start-line="39" selection-start-column="47" selection-end-line="39" selection-end-column="47" />
-                  <folding>
-                    <element signature="e#42#64#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="debug.h" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/debug.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="432">
-                  <caret line="12" column="15" lean-forward="false" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="600">
+      <file leaf-file-name="main.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="684">
+              <caret line="19" column="22" lean-forward="true" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mat_factory.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/matrix/mat_factory.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3132">
+              <caret line="93" column="46" lean-forward="false" selection-start-line="93" selection-start-column="46" selection-end-line="93" selection-end-column="46" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mat.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/matrix/mat.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="648">
+              <caret line="302" column="92" lean-forward="false" selection-start-line="302" selection-start-column="92" selection-end-line="302" selection-end-column="92" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dispatcher.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/smoothing/dispatcher.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-791">
+              <caret line="35" column="59" lean-forward="false" selection-start-line="35" selection-start-column="59" selection-end-line="35" selection-end-column="59" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mat_itr.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/matrix/mat_itr.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4356">
+              <caret line="123" column="51" lean-forward="false" selection-start-line="123" selection-start-column="51" selection-end-line="123" selection-end-column="51" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="smoother.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/smoothing/smoother.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="720">
+              <caret line="20" column="53" lean-forward="false" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="smoother.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/smoothing/smoother.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="793">
+              <caret line="134" column="33" lean-forward="false" selection-start-line="134" selection-start-column="33" selection-end-line="134" selection-end-column="33" />
+              <folding>
+                <element signature="e#42#61#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="bmark.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/benchmarking/bmark.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="360">
+              <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="bmark.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/benchmarking/bmark.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="469">
+              <caret line="68" column="35" lean-forward="false" selection-start-line="68" selection-start-column="35" selection-end-line="68" selection-end-column="35" />
+              <folding>
+                <element signature="e#42#64#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="debug.h" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/debug.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="432">
+              <caret line="12" column="15" lean-forward="false" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -296,18 +225,18 @@
         <option value="$PROJECT_DIR$/bin/cw-run.sh" />
         <option value="$PROJECT_DIR$/src/spool/spool_dispatcher.c" />
         <option value="$PROJECT_DIR$/src/benchmarking/bmark.h" />
-        <option value="$PROJECT_DIR$/src/smoothing/dispatcher.c" />
         <option value="$PROJECT_DIR$/src/smoothing/smoother.h" />
-        <option value="$PROJECT_DIR$/src/matrix/mat.c" />
         <option value="$PROJECT_DIR$/src/matrix/mat.h" />
-        <option value="$PROJECT_DIR$/src/matrix/mat_factory.c" />
         <option value="$PROJECT_DIR$/src/matrix/mat_itr.h" />
-        <option value="$PROJECT_DIR$/src/matrix/mat_itr.c" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/smoothing/smoother.c" />
         <option value="$PROJECT_DIR$/bin/slurm_job_gen.py" />
         <option value="$PROJECT_DIR$/src/main.c" />
         <option value="$PROJECT_DIR$/src/benchmarking/bmark.c" />
+        <option value="$PROJECT_DIR$/src/matrix/mat.c" />
+        <option value="$PROJECT_DIR$/src/matrix/mat_factory.c" />
+        <option value="$PROJECT_DIR$/src/matrix/mat_itr.c" />
+        <option value="$PROJECT_DIR$/src/smoothing/smoother.c" />
+        <option value="$PROJECT_DIR$/src/smoothing/dispatcher.c" />
       </list>
     </option>
   </component>
@@ -761,6 +690,7 @@
       <workItem from="1482768963178" duration="18877000" />
       <workItem from="1482885386511" duration="13012000" />
       <workItem from="1482948706231" duration="4845000" />
+      <workItem from="1483478569556" duration="6210000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1478398751426</created>
@@ -885,7 +815,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="390001000" />
+    <option name="totallyTimeSpent" value="396211000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -900,7 +830,7 @@
     <frame x="0" y="-16" width="3840" height="2146" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19099627" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26718166" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936302" sideWeight="0.49893162" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3285273" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="LuaJ" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1061,7 +991,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
           <caret line="15" column="65" lean-forward="false" selection-start-line="15" selection-start-column="65" selection-end-line="15" selection-end-column="65" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1074,14 +1003,6 @@
           <folding>
             <element signature="e#42#62#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/cw-run.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="3" column="33" lean-forward="false" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="33" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1104,6 +1025,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/matrix/mat_itr.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="756">
+          <caret line="21" column="50" lean-forward="false" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/smoothing/smoother.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="20" column="53" lean-forward="false" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/benchmarking/bmark.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/slurm_job_gen.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="549">
+          <caret line="63" column="24" lean-forward="false" selection-start-line="63" selection-start-column="24" selection-end-line="63" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/cw-run.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="3" column="33" lean-forward="false" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="684">
+          <caret line="19" column="7" lean-forward="false" selection-start-line="19" selection-start-column="7" selection-end-line="19" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/bin/cw-prepare.sh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="396">
@@ -1122,42 +1091,72 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/matrix/mat.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1260">
+        <state relative-caret-position="1188">
           <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
           <folding>
-            <element signature="e#147#163#0" expanded="true" />
+            <element signature="e#147#163#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/matrix/mat_itr.h">
+    <entry file="file://$PROJECT_DIR$/src/main.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="756">
-          <caret line="21" column="50" lean-forward="false" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
-          <folding />
+        <state relative-caret-position="684">
+          <caret line="19" column="22" lean-forward="true" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/benchmarking/bmark.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="469">
+          <caret line="68" column="35" lean-forward="false" selection-start-line="68" selection-start-column="35" selection-end-line="68" selection-end-column="35" />
+          <folding>
+            <element signature="e#42#64#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/matrix/mat.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="648">
-          <caret line="18" column="25" lean-forward="false" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="25" />
+          <caret line="302" column="92" lean-forward="false" selection-start-line="302" selection-start-column="92" selection-end-line="302" selection-end-column="92" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/matrix/mat_factory.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3132">
+          <caret line="93" column="46" lean-forward="false" selection-start-line="93" selection-start-column="46" selection-end-line="93" selection-end-column="46" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/matrix/mat_itr.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2412">
-          <caret line="67" column="8" lean-forward="false" selection-start-line="67" selection-start-column="8" selection-end-line="67" selection-end-column="8" />
+        <state relative-caret-position="4356">
+          <caret line="123" column="51" lean-forward="false" selection-start-line="123" selection-start-column="51" selection-end-line="123" selection-end-column="51" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/benchmarking/bmark.h">
+    <entry file="file://$PROJECT_DIR$/src/smoothing/smoother.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+        <state relative-caret-position="793">
+          <caret line="134" column="33" lean-forward="false" selection-start-line="134" selection-start-column="33" selection-end-line="134" selection-end-column="33" />
+          <folding>
+            <element signature="e#42#61#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/smoothing/dispatcher.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-791">
+          <caret line="35" column="59" lean-forward="false" selection-start-line="35" selection-start-column="59" selection-end-line="35" selection-end-column="59" />
           <folding />
         </state>
       </provider>
@@ -1167,78 +1166,6 @@
         <state relative-caret-position="432">
           <caret line="12" column="15" lean-forward="false" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="684">
-          <caret line="19" column="7" lean-forward="false" selection-start-line="19" selection-start-column="7" selection-end-line="19" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/smoothing/smoother.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="20" column="53" lean-forward="false" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/slurm_job_gen.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="49" column="18" lean-forward="false" selection-start-line="49" selection-start-column="18" selection-end-line="49" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="684">
-          <caret line="19" column="21" lean-forward="false" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/benchmarking/bmark.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="39" column="47" lean-forward="false" selection-start-line="39" selection-start-column="47" selection-end-line="39" selection-end-column="47" />
-          <folding>
-            <element signature="e#42#64#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/smoothing/smoother.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="72" column="19" lean-forward="true" selection-start-line="72" selection-start-column="19" selection-end-line="72" selection-end-column="19" />
-          <folding>
-            <element signature="e#42#61#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/matrix/mat_factory.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2124">
-          <caret line="62" column="16" lean-forward="true" selection-start-line="62" selection-start-column="4" selection-end-line="62" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/smoothing/dispatcher.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="47" column="18" lean-forward="false" selection-start-line="47" selection-start-column="4" selection-end-line="47" selection-end-column="18" />
-          <folding>
-            <element signature="e#42#62#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>

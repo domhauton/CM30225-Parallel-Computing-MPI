@@ -30,21 +30,21 @@ mat_t *mat_smooth(mat_t *source, mat_t *target, double limit, bool *overLimit);
 
 void mat_print_local(mat_t *matrix);
 
-void mat_print_mpi(mat_t *matrix);
+void mat_mpi_print(mat_t *matrix);
 
 bool mat_equals(mat_t *matrix1, mat_t *matrix2);
 
-unsigned long long int mat_parity(mat_t *matrix);
+unsigned long long int mat_mpi_parity(mat_t *matrix);
 
-unsigned long long int mat_crc64(mat_t *matrix);
+unsigned long long int mat_mpi_crc64(mat_t *matrix);
 
 unsigned long long int mat_parity_local(mat_t *matrix);
 
 unsigned long long int mat_crc64_local(mat_t *matrix);
 
-int mat_shareRows(mat_t* mat, MPI_Request* mpi_request);
+int mat_mpi_shareRows(mat_t *mat, MPI_Request *mpi_request);
 
-int mat_acceptEdgeRows(mat_t* mat, MPI_Request* mpi_request);
+int mat_mpi_acceptEdgeRows(mat_t *mat, MPI_Request *mpi_request);
 
 void mat_destroy(mat_t *matrix);
 

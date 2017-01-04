@@ -20,7 +20,7 @@ double bmark_serial(int size, double precision) {
     mat_t *matrix1 = mat_factory_init_seeded(size, size);
     bool overLimit;
     gettimeofday(&tv_start, NULL);
-    mat_t *tmp = mat_init_clone_edge(matrix1);
+    mat_t *tmp = mat_init_clone_edge(matrix1); // Temporary matrix required for computing smooth results.
     mat_t *retMat = mat_smooth(matrix1, tmp, precision, &overLimit);
     gettimeofday(&tv_end, NULL);
 
@@ -31,6 +31,7 @@ double bmark_serial(int size, double precision) {
     unsigned long long crc64 = mat_crc64_local(retMat);
     printf("00,%05d,%03d,%f,%f,%016llx,%016llx\n", size, 1, precision, time_spent, parity, crc64);
 
+    // Clean up
     mat_destroy(matrix1);
     mat_destroy(tmp);
     return time_spent;
@@ -52,14 +53,21 @@ double bmark_mpi(int size, double precision) {
 
     bool overLimit = true;
 
-    MPI_Barrier(MPI_COMM_WORLD);
-    gettimeofday(&tv_start, NULL);
+    MPI_Barrier(MPI_COMM_WORLD); // Ensure all nodes start their clock at the same time.
 
+    gettimeofday(&tv_start, NULL);
+    // Get the section of the matrix that will be calculated locally
     mat_t* local = mat_scatter(mainMatrix, size, size);
     mat_t *tmp = mat_init_clone_edge(local);
+
+    // Create a formal job to be executed
+
     dispatcher_task_t *dispatcher_task = dispatcher_task_init(local, tmp, precision, &overLimit);
     dispatcher_task_run(dispatcher_task);
     mat_t *retMat = dispatcher_task_mat(dispatcher_task);
+
+    // Clean up and gather results.
+
     mat_gather(mainMatrix, retMat, size, size);
     mat_destroy(local);
     mat_destroy(tmp);
@@ -70,17 +78,19 @@ double bmark_mpi(int size, double precision) {
     double local_time_spent = (double) (tv_end.tv_usec - tv_start.tv_usec) / 1000000
                               + (double) (tv_end.tv_sec - tv_start.tv_sec);
 
+    // Find the maximum time any node spent on computation.
     double global_max_time_spent;
     MPI_Reduce(&local_time_spent, &global_max_time_spent, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
 
     if(node == 0) {
+        // Only master needs to print results
         unsigned long long local_parity = mat_parity_local(mainMatrix);
         unsigned long long local_crc64 = mat_crc64_local(mainMatrix);
         printf("%08d,01,%05d,%03d,%f,%f,%016llx,%016llx\n", loopCtr, size, totalNodes,  precision, global_max_time_spent, local_parity, local_crc64);
     }
 
+    // Cleanup that should not be counted in the computation time
     dispatcher_task_destroy(dispatcher_task);
-
     if(node == 0) {
         mat_destroy(mainMatrix);
     }
