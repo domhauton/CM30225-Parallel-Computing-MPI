@@ -1,4 +1,4 @@
-# CM30225-Parallel-Computing-Coursework-2
+# CM30225 Parallel Computing Coursework 2
 http://people.bath.ac.uk/masrjb/CourseNotes/cm30225.html
 
 # Grade
