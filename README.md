@@ -2,7 +2,12 @@
 http://people.bath.ac.uk/masrjb/CourseNotes/cm30225.html
 
 # Grade
-Unknown
+90/100
+
+# Report
+Full LaTeX report is available at the link below.
+
+https://github.com/domhauton/CM30225-Parallel-Computing-Coursework-2/blob/master/report/Report.pdf
 
 # Running the Coursework
 Scripts to run the coursework on Balena are available in **./bin** in the submitted coursework.
